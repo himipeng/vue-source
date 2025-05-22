@@ -5,6 +5,7 @@ import About from '../views/About/index.ts'
 import C1 from '../views/About/C1.ts'
 import C2 from '../views/About/C2.ts'
 import C11 from '../views/About/C11.ts'
+import Component from '../views/Component/index.ts'
 
 const routes: Routes = [
   {
@@ -35,6 +36,11 @@ const routes: Routes = [
         component: C2,
       },
     ],
+  },
+  {
+    path: '/component',
+    name: 'component',
+    component: Component,
   },
 ]
 

@@ -57,7 +57,6 @@ class HashRouter {
 
     // 捕获路由链表
     const link = this.capture(this.currentPath, this.routes)
-    console.log(link)
     if (!link) {
       console.error(`No route found for path: ${this.currentPath}`)
       return
@@ -79,7 +78,7 @@ class HashRouter {
   public mount(root: Element) {
     this.root = root
 
-    window.addEventListener('hashchange', (e) => {
+    window.addEventListener('hashchange', () => {
       this.render(root)
     })
 

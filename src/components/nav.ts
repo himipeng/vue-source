@@ -40,7 +40,12 @@ class Nav {
 
   private render() {
     this.tags.forEach((tag) => {
-      tag.dom.style.color = this.router.currentPath === tag.path ? 'red' : 'blue'
+      const current = this.router.currentPath
+      if (tag.path === '/') {
+        tag.dom.style.color = current === tag.path ? 'red' : 'blue'
+      } else {
+        tag.dom.style.color = current.startsWith(tag.path) ? 'red' : 'blue'
+      }
     })
   }
 

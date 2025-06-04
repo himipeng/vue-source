@@ -2,6 +2,10 @@ import Observer from './Observer'
 
 export interface VueOptions {
   data?: Object | Function
+  methods?: {
+    // TODO: 推断 this 的属性
+    [key: string]: (this: any, ...args: any[]) => any
+  }
   [key: string]: any
 }
 
@@ -12,6 +16,7 @@ class Vue<T extends VueOptions = VueOptions> {
   constructor($options: T) {
     this.$options = $options || {}
     this.initData()
+    this._initMethods()
   }
 
   /** 数据初始化 */
@@ -27,6 +32,16 @@ class Vue<T extends VueOptions = VueOptions> {
 
     // 数据劫持核心：观察 data
     // this.observe(data)
+  }
+
+  /** 初始化方法 */
+  private _initMethods() {
+    const methods = this.$options.methods || {}
+    for (const key in methods) {
+      const method = methods[key]
+      // 绑定 this 到当前 Vue 实例
+      this[key] = method.bind(this)
+    }
   }
 
   /** 数据代理 */

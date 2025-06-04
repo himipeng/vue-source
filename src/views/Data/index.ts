@@ -1,7 +1,13 @@
 import defineComponent from '../../code/defineComponent'
 
 const template = `
-  <h1>data</h1>
+  <div>
+    <h1>Data</h1>
+    <p>Count: {{ count }}</p>
+    <p>Person: {{ person.name }}, Age: {{ person.age }}</p>
+    <button @click="incrementCount">count++</button>
+    <button @click="incrementAge">Age++</button>
+  </div>
   `
 
 const vc = defineComponent({
@@ -14,6 +20,14 @@ const vc = defineComponent({
         name: 'amy',
       },
     }
+  },
+  methods: {
+    incrementCount() {
+      this.count += 1
+    },
+    incrementAge() {
+      this.person.age += 1
+    },
   },
 })
 

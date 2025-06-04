@@ -6,6 +6,7 @@ import C1 from '../views/About/C1.ts'
 import C2 from '../views/About/C2.ts'
 import C11 from '../views/About/C11.ts'
 import Component from '../views/Component/index.ts'
+import Data from '../views/Data/index.ts'
 
 const routes: Routes = [
   {
@@ -41,6 +42,11 @@ const routes: Routes = [
     path: '/component',
     name: 'component',
     component: Component,
+  },
+  {
+    path: '/data',
+    name: 'data',
+    component: Data,
   },
 ]
 

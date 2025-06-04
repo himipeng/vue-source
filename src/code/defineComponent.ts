@@ -1,23 +1,27 @@
-interface ComponentOptions {
+import Vue, { type VueOptions } from './vue2/Vue'
+
+interface ComponentOptions extends VueOptions {
   template?: string
   components?: { [key: string]: Component }
   [key: string]: any
 }
 
-export class Component {
-  private options
-
+export class Component extends Vue<ComponentOptions> {
   constructor(options: ComponentOptions) {
-    this.options = options
+    super(options)
   }
 
+  /** 渲染 */
   public render(root: Element, replace?: true) {
-    const { template } = this.options
+    const { template } = this.$options
     if (!template) return
 
+    // 渲染视图组件不需要替换<router-view>节点
     if (!replace) {
       root.innerHTML = template.trim()
-    } else {
+    }
+    // 渲染子组件才需要替换节点
+    else {
       // 用一个容器解析 template 字符串为 DOM
       const wrapper = document.createElement('div')
       wrapper.innerHTML = template.trim()
@@ -39,15 +43,14 @@ export class Component {
     this.renderComponent(root)
   }
 
+  /** 渲染子组件 */
   private renderComponent(root: Element) {
-    const { components } = this.options
+    const { components } = this.$options
     if (!components) return
 
+    // 遍历组件定义
     Object.entries(components).forEach(([key, component]) => {
-      console.log(key, component)
       const els = root.querySelectorAll(key)
-      console.log(els)
-
       els.forEach((el) => {
         component.render(el, true)
       })

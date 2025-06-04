@@ -7,6 +7,7 @@ const template = `
     <p>Person: {{ person.name }}, Age: {{ person.age }}</p>
     <button @click="incrementCount">count++</button>
     <button @click="incrementAge">Age++</button>
+    <button @click="changePerson">change person</button>
   </div>
   `
 
@@ -27,6 +28,12 @@ const vc = defineComponent({
     },
     incrementAge() {
       this.person.age += 1
+    },
+    changePerson() {
+      this.person = {
+        age: 18,
+        name: 'bob',
+      }
     },
   },
 })

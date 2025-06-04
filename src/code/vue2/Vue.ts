@@ -16,7 +16,6 @@ class Vue<T extends VueOptions = VueOptions> {
   constructor($options: T) {
     this.$options = $options || {}
     this.initData()
-    this._initMethods()
   }
 
   /** 数据初始化 */
@@ -25,23 +24,13 @@ class Vue<T extends VueOptions = VueOptions> {
     // 将 data 存放到 _data 中
     data = this._data = typeof data === 'function' ? data.call(this) : data
 
-    // 将 data 中的属性代理到 vm 实例上
+    // 数据代理：将 _data 中的属性代理到 Vue 实例上
     for (let key in data) {
       this.proxy(this, `_data`, key)
     }
 
     // 数据劫持核心：观察 data
-    // this.observe(data)
-  }
-
-  /** 初始化方法 */
-  private _initMethods() {
-    const methods = this.$options.methods || {}
-    for (const key in methods) {
-      const method = methods[key]
-      // 绑定 this 到当前 Vue 实例
-      this[key] = method.bind(this)
-    }
+    this.observe(data)
   }
 
   /** 数据代理 */
@@ -57,15 +46,9 @@ class Vue<T extends VueOptions = VueOptions> {
   }
 
   /** 数据劫持 */
-  private observe(value) {
+  private observe(value: any) {
     if (typeof value !== 'object' || value === null) return
-    let ob
-    if (value.__ob__ !== undefined) {
-      ob = value.__ob__
-    } else {
-      ob = new Observer(value)
-    }
-    return ob
+    new Observer(value)
   }
 }
 

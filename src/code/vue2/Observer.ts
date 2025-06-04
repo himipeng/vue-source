@@ -1,53 +1,51 @@
-import Dep from './Dep'
+// 将一个普通对象转换为响应式对象
+export default class Observer {
+  constructor(data: any) {
+    this.walk(data)
 
-class Observer {
-  value
-
-  constructor(value) {
-    this.value = value
-    def(value, '__ob__', this) // 标记为已经观察过
-
-    if (Array.isArray(value)) {
-      // 重写数组方法
-      value.__proto__ = arrayMethods
-      this.observeArray(value)
-    } else {
-      this.walk(value)
-    }
+    // 将 Observer 实例挂载到数据对象上，给对象打上响应式的“标记”
+    Object.defineProperty(data, '__ob__', {
+      value: this,
+      enumerable: false,
+    })
   }
 
-  walk(obj) {
-    Object.keys(obj).forEach((key) => this.defineReactive(obj, key, obj[key]))
+  /** 遍历对象所有属性，进行响应式处理 */
+  private walk(obj: object) {
+    Object.keys(obj).forEach((key) => {
+      this.defineReactive(obj, key, obj[key])
+    })
   }
 
-  observeArray(items) {
-    items.forEach((item) => observe(item))
-  }
-
-  private defineReactive(obj, key, val) {
-    const dep = new Dep() // 每个属性一个 Dep
-
-    const childOb = observe(val) // 深度递归劫持
+  /** 定义响应式属性 */
+  private defineReactive(obj: any, key: string, val: any) {
+    const self = this
+    // 递归处理嵌套对象
+    this.observe(val)
 
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get() {
-        if (Dep.target) {
-          dep.depend() // 收集依赖
-          if (childOb) childOb.dep.depend() // 嵌套对象也收集
-        }
+        // 你可以在这里添加依赖收集（Dep）
         return val
       },
       set(newVal) {
-        if (newVal !== val) {
-          val = newVal
-          observe(newVal) // 新值也要被观察
-          dep.notify() // 通知依赖更新
-        }
+        if (newVal === val) return
+        val = newVal
+        // 你可以在这里触发更新视图
+        console.log(`[Reactive] ${key} updated to`, newVal)
+        // 如果新值是对象，也需要观察
+        // 此时 this 指向 obj
+        self.observe(newVal) // 新值也可能是对象，需要递归
       },
     })
   }
-}
 
-export default Observer
+  /** 观察子对象 */
+  private observe(value: any) {
+    if (typeof value === 'object' && value !== null) {
+      new Observer(value)
+    }
+  }
+}

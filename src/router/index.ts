@@ -1,10 +1,10 @@
 import type { Routes } from '../types/router'
 import HashRouter from './hashRouter'
 import Home from '../views/Home/index.ts'
-import About from '../views/About/index.ts'
-import C1 from '../views/About/C1.ts'
-import C2 from '../views/About/C2.ts'
-import C11 from '../views/About/C11.ts'
+import About from '../views/Route/index.ts'
+import C1 from '../views/Route/C1.ts'
+import C2 from '../views/Route/C2.ts'
+import C11 from '../views/Route/C11.ts'
 import Component from '../views/Component/index.ts'
 import Data from '../views/Data/index.ts'
 
@@ -15,24 +15,24 @@ const routes: Routes = [
     name: 'home',
   },
   {
-    path: '/about',
+    path: '/route',
     component: About,
-    name: 'about',
+    name: 'route',
     children: [
       {
-        path: '/about/c1',
+        path: '/route/c1',
         name: 'c1',
         component: C1,
         children: [
           {
-            path: '/about/c1/c11',
+            path: '/route/c1/c11',
             name: 'c11',
             component: C11,
           },
         ],
       },
       {
-        path: '/about/c2',
+        path: '/route/c2',
         name: 'c2',
         component: C2,
       },

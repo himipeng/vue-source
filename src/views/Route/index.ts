@@ -2,8 +2,9 @@ import defineComponent from '../../code/defineComponent'
 
 const template = `
   <div>
-    <h2>C1</h2> 
-    <a href="#/about/c1/c11">C11</a>
+    <h1>Route</h1> 
+    <a href="#/route/c1">C1</a>
+    <a href="#/route/c2">C2</a>
     <router-view></router-view>
   </div>
   `

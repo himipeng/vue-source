@@ -11,8 +11,10 @@ const template = `
     <button @click="incrementAge">Age++</button>
     <button @click="changePerson">change person</button>
     <hr/>
+    <span>子组件1</span>
     <Counter></Counter>
     <hr/>
+    <span>子组件2</span>
     <Counter></Counter>
   </div>
   `

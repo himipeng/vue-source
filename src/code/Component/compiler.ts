@@ -51,6 +51,8 @@ export default class Compiler {
         this._bindings.set(key, [])
       }
       this._bindings.get(key)!.push(el as HTMLElement)
+      // 清理属性
+      el.removeAttribute('data-bind')
     })
   }
 

@@ -1,3 +1,4 @@
+import Component from '../code/Component'
 import type { Route, Routes } from '../types/router'
 
 interface RouteLink {
@@ -45,7 +46,7 @@ class HashRouter {
     if (!view) return
     const { component } = route
     if (!component) return
-    component.render(view)
+    new Component(component).mount(view)
 
     if (child) {
       this.renderLink(child, view)

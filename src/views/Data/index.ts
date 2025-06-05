@@ -1,17 +1,24 @@
-import defineComponent from '../../code/defineComponent'
+import defineComponent from '../../code/Component/defineComponent'
+import Counter from './Counter'
 
 const template = `
   <div>
     <h1>Data</h1>
     <p>Count: {{ count }}</p>
-    <p>Person: {{ person.name }}, Age: {{ person.age }}</p>
+    <p>Count: {{ count }}</p>
     <button @click="incrementCount">count++</button>
+    <p>Person: {{ person.name }}, Age: {{ person.age }}</p>
     <button @click="incrementAge">Age++</button>
     <button @click="changePerson">change person</button>
+    <hr/>
+    <Counter></Counter>
+    <hr/>
+    <Counter></Counter>
   </div>
   `
 
 const vc = defineComponent({
+  name: 'DataView',
   template,
   data() {
     return {
@@ -35,6 +42,9 @@ const vc = defineComponent({
         name: 'bob',
       }
     },
+  },
+  components: {
+    Counter,
   },
 })
 

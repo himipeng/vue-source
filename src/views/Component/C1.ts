@@ -1,4 +1,4 @@
-import defineComponent from '../../code/defineComponent'
+import defineComponent from '../../code/Component/defineComponent'
 
 const template = `
   <div>C1</div>

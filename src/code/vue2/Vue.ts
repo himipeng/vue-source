@@ -6,7 +6,7 @@ export interface VueOptions {
     // TODO: 推断 this 的属性
     [key: string]: (this: any, ...args: any[]) => any
   }
-  [key: string]: any
+  // [key: string]: any
 }
 
 class Vue<T extends VueOptions = VueOptions> {

@@ -1,8 +1,8 @@
-import type { Component } from '../code/defineComponent'
+import type { ComponentOptions } from '../code/Component/defineComponent'
 
 export interface Route {
   path: string
-  component: Component
+  component: ComponentOptions
   name?: string
   children?: Route[]
 }

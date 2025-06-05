@@ -6,7 +6,6 @@ export interface ComponentOptions extends VueOptions {
   name?: string
   template?: string
   components?: { [key: string]: ComponentOptions }
-  // [key: string]: any
 }
 
 export default class Component extends Vue<ComponentOptions> {

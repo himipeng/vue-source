@@ -28,7 +28,6 @@ export default class Compiler {
 
     // 每次都 patch 插值值
     this.patchBindings()
-    // this.renderComponent(this._el)
   }
 
   /** 编译模板 */

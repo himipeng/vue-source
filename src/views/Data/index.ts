@@ -48,6 +48,4 @@ const vc = defineComponent({
   },
 })
 
-// console.log(vc)
-
 export default vc

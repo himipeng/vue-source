@@ -14,7 +14,7 @@ export default class Component extends Vue<ComponentOptions> {
   /** 挂载节点 */
   public _el?: Element
   /** 子组件实例 */
-  private _childrenMap = new Map<string, Component>()
+  private _childrenMap = new Map<Element, Component>()
 
   constructor(public options: ComponentOptions) {
     super(options)
@@ -43,13 +43,12 @@ export default class Component extends Vue<ComponentOptions> {
     Object.entries(components).forEach(([tag, componentOptions]) => {
       const els = root.querySelectorAll(tag)
 
-      els.forEach((el, inx) => {
+      els.forEach((el) => {
         // 使用缓存，避免每次都重新实例化子组件
-        const key = `${tag}-${inx}`
-        let child = this._childrenMap.get(key)
+        let child = this._childrenMap.get(el)
         if (!child) {
           child = new Component(componentOptions)
-          this._childrenMap.set(key, child)
+          this._childrenMap.set(el, child)
         }
         child.mount(el)
       })

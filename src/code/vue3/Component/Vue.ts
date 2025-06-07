@@ -1,5 +1,5 @@
-import { isRef } from './utils'
-import Observer from '../vue2/Observer'
+import { isRef } from '../utils'
+import Observer from '../../vue2/Observer'
 
 export interface VueOptions {
   data?: Object | Function

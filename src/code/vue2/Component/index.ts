@@ -1,5 +1,5 @@
-import Vue, { type VueOptions } from '../vue2/Vue'
-import Watcher from '../vue2/Watcher'
+import Vue, { type VueOptions } from './Vue'
+import Watcher from '../Watcher'
 import Compiler from './compiler'
 
 export interface ComponentOptions extends VueOptions {
@@ -30,6 +30,7 @@ export default class Component extends Vue<ComponentOptions> {
         compiler.update()
         // 渲染子组件
         this.renderComponent(el)
+        console.log('updated')
       })
     }
   }

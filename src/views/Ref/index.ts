@@ -1,33 +1,39 @@
-import defineComponent from '../../code/Component/defineComponent'
-import ReactiveEffect from '../../code/vue3/ReactiveEffect'
-import { ref } from '../../code/vue3/ref'
+import defineComponent from '../../code/vue2/Component/defineComponent'
+// import ReactiveEffect from '../../code/vue3/ReactiveEffect'
+// import { ref } from '../../code/vue3/ref'
 
 const template = `
-  <h1>Ref</h1>
+  <div>
+    <h1>Ref</h1>
+    <p>Count: {{ count }}</p>
+    <button @click="incrementCount">count++</button>
+    <button @click="log">log</button>
+  </div>
   `
-
 export default defineComponent({
   template,
+  // setup() {
+  //   const count = ref(0)
+  //   function incrementCount() {
+  //     count.value++
+  //     console.log(this)
+  //   }
+
+  //   return {
+  //     count,
+  //     incrementCount,
+  //   }
+  // },
+  // methods: {
+  //   log() {
+  //     console.log(this)
+  //   },
+  // },
 })
 
-// const flag = ref(true)
 // const count = ref(0)
-
 // const effect = new ReactiveEffect(() => {
-//   console.log(flag.value ? count.value : 'no count')
+//   console.log('Count changed:', count.value)
 // })
-
 // effect.run()
-// flag.value = false
-// count.value++
-
-const person = ref({
-  name: 'Amy',
-  age: 18,
-})
-const effect = new ReactiveEffect(() => {
-  console.log('effect run:', person.value.name, person.value.age)
-})
-effect.run()
-person.value.name = 'Bob'
-person.value.age = 20
+// count.value = 1

@@ -1,4 +1,4 @@
-import Component from '../code/Component'
+import Component from '../code/vue2/Component'
 import type { Route, Routes } from '../types/router'
 
 interface RouteLink {

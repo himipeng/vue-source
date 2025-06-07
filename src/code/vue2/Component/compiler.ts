@@ -84,8 +84,9 @@ export default class Compiler {
 
     elements.forEach((el) => {
       const methodName = el.getAttribute('data-onclick')
+
       if (!methodName) return
-      const method = this.$component.options.methods?.[methodName]
+      const method = this.$component.options.methods?.[methodName] || this.$component[methodName]
 
       if (typeof method === 'function') {
         el.addEventListener('click', method.bind(this.$component))

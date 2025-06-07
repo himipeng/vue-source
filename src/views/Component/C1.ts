@@ -1,4 +1,4 @@
-import defineComponent from '../../code/Component/defineComponent'
+import defineComponent from '../../code/vue2/Component/defineComponent'
 
 const template = `
   <div>C1</div>

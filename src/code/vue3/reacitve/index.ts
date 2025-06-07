@@ -1,0 +1,42 @@
+import { isObject } from '../utils'
+import { track, trigger } from './targetMap'
+
+/** 用于缓存响应式对象，避免重复创建 */
+const reactiveMap = new WeakMap<object, any>()
+
+function reactive<T extends object>(target: T): T {
+  if (!isObject(target)) return target
+
+  // 已经被代理过的对象直接返回缓存
+  const existingProxy = reactiveMap.get(target)
+  if (existingProxy) return existingProxy
+
+  // 创建一个新的代理对象
+  const handler: ProxyHandler<T> = {
+    get(target, key, receiver) {
+      const res = Reflect.get(target, key, receiver)
+      // console.log('get', target, key, res)
+      track(target, key)
+
+      return res
+    },
+
+    set(target, key, value, receiver) {
+      const oldValue = target[key]
+      const result = Reflect.set(target, key, value, receiver)
+      if (value !== oldValue) {
+        // console.log('set', target, key, value, oldValue)
+        trigger(target, key)
+      }
+      return result
+    },
+  }
+  const proxy = new Proxy(target, handler)
+
+  // 缓存代理对象
+  reactiveMap.set(target, proxy)
+
+  return proxy
+}
+
+export default reactive

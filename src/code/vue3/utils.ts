@@ -1,4 +1,4 @@
-import RefImpl from './ref/refImpl'
+import type RefImpl from './ref/RefImpl'
 
 export const isObject = (val: any) => val !== null && typeof val === 'object'
 

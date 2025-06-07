@@ -1,4 +1,4 @@
-import type ReactiveEffect from './reactiveEffect'
+import type ReactiveEffect from './ReactiveEffect'
 
 export type Dep = Set<ReactiveEffect>
 

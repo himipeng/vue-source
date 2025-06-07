@@ -1,6 +1,7 @@
 import { createDep, type Dep } from '../Dep'
-import ReactiveEffect from '../reactiveEffect'
-import { hasChanged, toRaw } from '../utils'
+import reactive from '../reacitve'
+import ReactiveEffect from '../ReactiveEffect'
+import { hasChanged, isObject, toRaw } from '../utils'
 
 // 观察者模式中的Subject
 export default class RefImpl<T> {
@@ -43,9 +44,7 @@ export default class RefImpl<T> {
 }
 
 function toReactive(value: any) {
-  // return isObject(value) ? reactive(value) : value
-  // TODO
-  return value
+  return isObject(value) ? reactive(value) : value
 }
 
 export function trackRefValue(target: RefImpl<any>) {
@@ -53,7 +52,7 @@ export function trackRefValue(target: RefImpl<any>) {
   if (!ReactiveEffect.activeEffect) {
     return
   }
-  console.log('trackRefValue', dep.size, dep)
+  // console.log('trackRefValue', dep.size, dep)
   // 收集依赖
   dep.add(ReactiveEffect.activeEffect)
   // 双向追踪，反向记录
@@ -67,7 +66,7 @@ export function triggerRefValue(target: RefImpl<any>) {
   if (dep.size === 0) {
     return
   }
-  console.log('triggerRefValue', dep.size, dep)
+  // console.log('triggerRefValue', dep.size, dep)
 
   // 创建一个新的 Set 防止重复执行(快照)
   const effectsToRun = new Set<ReactiveEffect>()
@@ -80,6 +79,7 @@ export function triggerRefValue(target: RefImpl<any>) {
   })
 
   // 执行 effect，支持 scheduler
+  // TODO: 这里可以优化为异步执行
   effectsToRun.forEach((effect) => {
     if (effect.scheduler) {
       effect.scheduler()

@@ -11,7 +11,7 @@ export default class ReactiveEffect {
   // 双向追踪，反向记录
   /* 
   Vue 3 的响应式系统中：
-	•	dep (Set<effect>)：被观察对象记录所有观察者（你说的对✅）
+	•	dep (Set<effect>)：被观察对象记录所有观察者
 	•	effect.deps (Dep[])：观察者反过来记录自己在哪些对象中被追踪（用于清理）
   二者配合，构成了可追踪 + 可解绑的响应系统，比 Vue 2 更高效可靠。
   */

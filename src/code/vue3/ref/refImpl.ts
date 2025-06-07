@@ -1,5 +1,8 @@
+import { createDep, type Dep } from '../Dep'
+import ReactiveEffect from '../reactiveEffect'
 import { hasChanged, toRaw } from '../utils'
 
+// 观察者模式中的Subject
 export default class RefImpl<T> {
   /** 原始值 */
   private _rawValue: T
@@ -7,6 +10,8 @@ export default class RefImpl<T> {
   private _value: T
   /** ref标识 */
   public readonly __v_isRef = true
+  /** 中介容器，把 Subject 和多个 Observer 关联起来 */
+  public dep: Dep = createDep()
 
   constructor(value: T) {
     // 保存原始值到_rawValue
@@ -17,6 +22,7 @@ export default class RefImpl<T> {
 
   get value() {
     // 收集依赖
+    trackRefValue(this)
     return this._value
   }
 
@@ -31,6 +37,7 @@ export default class RefImpl<T> {
       // 判断是否是对象，进行赋值
       this._value = toReactive(newValue)
       // 派发通知
+      triggerRefValue(this)
     }
   }
 }
@@ -41,6 +48,43 @@ function toReactive(value: any) {
   return value
 }
 
-export function trackRefValue(target: RefImpl<any>) {}
+export function trackRefValue(target: RefImpl<any>) {
+  const dep = target.dep
+  if (!ReactiveEffect.activeEffect) {
+    return
+  }
+  console.log('trackRefValue', dep.size, dep)
+  // 收集依赖
+  dep.add(ReactiveEffect.activeEffect)
+  // 双向追踪，反向记录
+  if (!ReactiveEffect.activeEffect?.deps.includes(dep)) {
+    ReactiveEffect.activeEffect.deps.push(dep)
+  }
+}
 
-export function triggerRefValue(target: RefImpl<any>) {}
+export function triggerRefValue(target: RefImpl<any>) {
+  const dep = target.dep
+  if (dep.size === 0) {
+    return
+  }
+  console.log('triggerRefValue', dep.size, dep)
+
+  // 创建一个新的 Set 防止重复执行(快照)
+  const effectsToRun = new Set<ReactiveEffect>()
+
+  // 收集要运行的 effect（避免自身触发自身）
+  dep.forEach((effect) => {
+    if (effect !== ReactiveEffect.activeEffect) {
+      effectsToRun.add(effect)
+    }
+  })
+
+  // 执行 effect，支持 scheduler
+  effectsToRun.forEach((effect) => {
+    if (effect.scheduler) {
+      effect.scheduler()
+    } else {
+      effect.run()
+    }
+  })
+}

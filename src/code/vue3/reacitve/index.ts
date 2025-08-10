@@ -15,17 +15,16 @@ function reactive<T extends object>(target: T): T {
   const handler: ProxyHandler<T> = {
     get(target, key, receiver) {
       const res = Reflect.get(target, key, receiver)
-      // console.log('get', target, key, res)
       track(target, key)
 
-      return res
+      // 递归响应式处理
+      return isObject(res) ? reactive(res as object) : res
     },
 
     set(target, key, value, receiver) {
       const oldValue = target[key]
       const result = Reflect.set(target, key, value, receiver)
       if (value !== oldValue) {
-        // console.log('set', target, key, value, oldValue)
         trigger(target, key)
       }
       return result

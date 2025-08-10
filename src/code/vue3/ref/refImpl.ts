@@ -48,11 +48,11 @@ function toReactive(value: any) {
 }
 
 export function trackRefValue(target: RefImpl<any>) {
-  const dep = target.dep
   if (!ReactiveEffect.activeEffect) {
     return
   }
-  console.log('trackRefValue', dep.size, dep)
+  const dep = target.dep
+  // console.log('trackRefValue', dep.size, dep)
   // 收集依赖
   dep.add(ReactiveEffect.activeEffect)
   // 双向追踪，反向记录
@@ -66,7 +66,7 @@ export function triggerRefValue(target: RefImpl<any>) {
   if (dep.size === 0) {
     return
   }
-  console.log('triggerRefValue', dep.size, dep)
+  // console.log('triggerRefValue', dep.size, dep)
 
   // 创建一个新的 Set 防止重复执行(快照)
   const effectsToRun = new Set<ReactiveEffect>()

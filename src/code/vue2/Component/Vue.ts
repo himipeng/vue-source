@@ -1,15 +1,8 @@
+import type { ComponentOptions } from '../../../types/component'
 import Observer from '../Observer'
 
-export interface VueOptions {
-  data?: Object | Function
-  methods?: {
-    // TODO: 推断 this 的属性
-    [key: string]: (this: any, ...args: any[]) => any
-  }
-}
-
-class Vue<T extends VueOptions = VueOptions> {
-  _data: Object = {}
+class Vue<T extends ComponentOptions = ComponentOptions> {
+  _data: Record<string, any> = {}
   protected $options: T
 
   constructor($options: T) {
@@ -20,8 +13,10 @@ class Vue<T extends VueOptions = VueOptions> {
   /** 数据初始化 */
   initData() {
     let data = this.$options.data
+    if (!data) return
+
     // 将 data 存放到 _data 中
-    data = this._data = typeof data === 'function' ? data.call(this) : data
+    data = this._data = typeof data === 'function' ? (data as (() => Record<string, any>)).call(this) : data
 
     // 数据代理：将 _data 中的属性代理到 Vue 实例上
     for (let key in data) {

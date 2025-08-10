@@ -1,4 +1,4 @@
-import type { ComponentOptions } from '../code/vue2/Component/defineComponent'
+import type { ComponentOptions } from './component'
 
 export interface Route {
   path: string

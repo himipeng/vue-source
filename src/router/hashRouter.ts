@@ -1,4 +1,5 @@
-import Component from '../code/vue2/Component'
+import Component2 from '../code/vue2/Component'
+import Component3 from '../code/vue3/Component'
 import type { Route, Routes } from '../types/router'
 
 interface RouteLink {
@@ -46,6 +47,7 @@ class HashRouter {
     if (!view) return
     const { component } = route
     if (!component) return
+    const Component = component.$type === 'vue3' ? Component3 : Component2
     new Component(component).mount(view)
 
     if (child) {

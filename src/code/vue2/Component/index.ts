@@ -1,14 +1,9 @@
-import Vue, { type VueOptions } from './Vue'
+import Vue from './Vue'
 import Watcher from '../Watcher'
 import Compiler from './compiler'
+import type { ComponentOptions } from '../../../types/component'
 
-export interface ComponentOptions extends VueOptions {
-  name?: string
-  template?: string
-  components?: { [key: string]: ComponentOptions }
-}
-
-export default class Component extends Vue<ComponentOptions> {
+export default class Component extends Vue {
   /** 观察者 */
   private watcher: Watcher | null = null
   /** 挂载节点 */
@@ -30,7 +25,6 @@ export default class Component extends Vue<ComponentOptions> {
         compiler.update()
         // 渲染子组件
         this.renderComponent(el)
-        console.log('updated')
       })
     }
   }

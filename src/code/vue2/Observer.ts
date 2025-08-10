@@ -37,6 +37,7 @@ export default class Observer {
       },
       set(newVal) {
         if (newVal === val) return
+        // 形成了闭包，val 相当于obj.key的另一个访问点
         val = newVal
         // console.log(`[Reactive] ${key} updated to`, newVal)
         // 通知所有依赖更新

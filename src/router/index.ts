@@ -9,6 +9,7 @@ import Component from '../views/Component/index.ts'
 import Data from '../views/Data/index.ts'
 import Ref from '../views/Ref/index.ts'
 import Reactive from '../views/Reactive/index.ts'
+import Watch from '../views/Watch/index.ts'
 
 const routes: Routes = [
   {
@@ -59,6 +60,11 @@ const routes: Routes = [
     path: '/reactive',
     name: 'reactive',
     component: Reactive,
+  },
+  {
+    path: '/watch',
+    name: 'watch',
+    component: Watch,
   },
 ]
 

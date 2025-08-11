@@ -14,6 +14,17 @@ function reactive<T extends object>(target: T): T {
   // 创建一个新的代理对象
   const handler: ProxyHandler<T> = {
     get(target, key, receiver) {
+      // 如果访问 __v_raw，返回原始对象
+      if (key === '__v_raw') {
+        return target
+      }
+      if (key === '__v_isRef') {
+        return false
+      }
+      if (key === '__v_isReactive') {
+        return true
+      }
+
       const res = Reflect.get(target, key, receiver)
       track(target, key)
 

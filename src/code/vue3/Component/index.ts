@@ -39,7 +39,6 @@ export default class Component {
     this._compiler = new Compiler(this)
 
     // 使用响应式 effect 包裹更新逻辑
-    // TODO： 缺少深度响应式处理
     effect(() => {
       this._compiler!.renderTemplate()
     })

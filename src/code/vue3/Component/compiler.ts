@@ -1,5 +1,7 @@
 import Component from '.'
-import { toDisplayString, toRaw } from '../utils'
+import { toRaw } from '../utils'
+import { toDisplayString } from '../utils/toDisplayString'
+import { traverse } from '../utils/traverse'
 
 export default class Compiler {
   /** 记录所有绑定点（文本节点位置） */
@@ -96,6 +98,7 @@ export default class Compiler {
       const value = keys.reduce((obj, k) => {
         return obj && obj[k]
       }, this.instance)
+      value && traverse(value) // 深度遍历，确保响应式更新
       const text = value !== undefined ? toRaw(value) : ''
       els.forEach((el) => {
         el.textContent = toDisplayString(text)

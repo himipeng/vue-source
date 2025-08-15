@@ -7,6 +7,7 @@
     "skipLibCheck": true,
     "paths": {
       "vue": ["src/code"],
+      "@vue/*": ["src/code/*"],
       "@/*": ["src/*"]
     },
     "baseUrl": ".",

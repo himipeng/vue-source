@@ -1,11 +1,12 @@
-import type {
-  Node,
-  SimpleExpressionNode,
-  InterpolationNode,
-  TextNode,
-  RootNode,
-  CompoundExpressionNode,
-} from '@/types/compiler-core'
+import {
+  type TemplateChildNode,
+  type SimpleExpressionNode,
+  type InterpolationNode,
+  type TextNode,
+  type RootNode,
+  type CompoundExpressionNode,
+  NodeTypes,
+} from '@/types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
 
 /**
@@ -183,25 +184,25 @@ function genFunctionPreamble(ast: RootNode, ctx: CodegenContext) {
  * @param node codegenNode 节点
  * @param ctx Codegen 上下文
  */
-function genNode(node: Node, ctx: CodegenContext) {
+function genNode(node: TemplateChildNode, ctx: CodegenContext) {
   if (!node) return
   switch (node.type) {
-    case 'VNodeCall':
+    case NodeTypes.VNODE_CALL:
       genVNodeCall(node, ctx)
       break
-    case 'SimpleExpression':
+    case NodeTypes.SIMPLE_EXPRESSION:
       genExpression(node, ctx)
       break
-    case 'Text':
+    case NodeTypes.TEXT:
       genText(node, ctx)
       break
-    case 'Interpolation':
+    case NodeTypes.INTERPOLATION:
       genInterpolation(node, ctx)
       break
-    case 'ObjectExpression':
+    case NodeTypes.JS_OBJECT_EXPRESSION:
       genObjectExpression(node, ctx)
       break
-    case 'CompoundExpression':
+    case NodeTypes.COMPOUND_EXPRESSION:
       genCompoundExpression(node, ctx)
       break
     default:

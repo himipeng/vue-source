@@ -1,10 +1,14 @@
-import type {
-  CompoundExpressionNode,
-  ElementNode,
-  InterpolationNode,
-  PropertyNode,
-  SimpleExpressionNode,
-} from '@/types/compiler-core'
+import {
+  ElementTypes,
+  NodeTypes,
+  type CompoundExpressionNode,
+  type ElementNode,
+  type InterpolationNode,
+  type Property,
+  type SimpleExpressionNode,
+  type TextNode,
+  type VNodeCall,
+} from '@/types/compiler-core/ast'
 import { isString } from '../../utils'
 
 /**
@@ -14,7 +18,7 @@ import { isString } from '../../utils'
  */
 export function createSimpleExpression(content: string, isStatic: boolean): SimpleExpressionNode {
   return {
-    type: 'SimpleExpression',
+    type: NodeTypes.SIMPLE_EXPRESSION,
     content,
     isStatic,
     loc: undefined!,
@@ -27,9 +31,9 @@ export function createSimpleExpression(content: string, isStatic: boolean): Simp
  * @param value SimpleExpressionNode，表示属性值
  * @returns PropertyNode 对象
  */
-export function createObjectProperty(key: PropertyNode['key'], value: PropertyNode['value']): PropertyNode {
+export function createObjectProperty(key: Property['key'], value: Property['value']): Property {
   return {
-    type: 'Property',
+    type: NodeTypes.JS_PROPERTY,
     key: typeof key === 'string' ? createSimpleExpression(key, true) : key,
     value,
   }
@@ -42,14 +46,14 @@ export function createObjectProperty(key: PropertyNode['key'], value: PropertyNo
  */
 export function createCompoundExpression(children: CompoundExpressionNode['children']): CompoundExpressionNode {
   return {
-    type: 'CompoundExpression',
+    type: NodeTypes.COMPOUND_EXPRESSION,
     children,
   }
 }
 
 export function createInterpolation(content: InterpolationNode['content'] | string): InterpolationNode {
   return {
-    type: 'Interpolation',
+    type: NodeTypes.INTERPOLATION,
     content: isString(content) ? createSimpleExpression(content, false) : content,
   }
 }
@@ -57,22 +61,31 @@ export function createInterpolation(content: InterpolationNode['content'] | stri
 export function createElementNode(
   tag: ElementNode['tag'],
   props: ElementNode['props'],
-  children: ElementNode['children']
+  children: ElementNode['children'],
+  tagType: ElementNode['tagType'] = ElementTypes.ELEMENT
 ): ElementNode {
   return {
-    type: 'Element',
+    type: NodeTypes.ELEMENT,
     tag,
     props,
     children,
+    tagType,
+  }
+}
+
+export function createTextNode(content: TextNode['content']): TextNode {
+  return {
+    type: NodeTypes.TEXT,
+    content,
   }
 }
 
 /**
  * 创建 VNode 调用表达式
  */
-export function createVNodeCall(tag: string, props: any, children: any): any {
+export function createVNodeCall(tag: string, props: any, children: any): VNodeCall {
   return {
-    type: 'VNodeCall',
+    type: NodeTypes.VNODE_CALL,
     tag,
     props,
     children,

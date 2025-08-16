@@ -1,12 +1,13 @@
-import type {
-  ElementNode,
-  Node,
-  ObjectExpressionNode,
-  Prop,
-  PropertyNode,
-  RootNode,
-  TransformContext,
-} from '@/types/compiler-core'
+import {
+  type ElementNode,
+  type TemplateChildNode,
+  type ObjectExpression,
+  type Prop,
+  type Property,
+  type RootNode,
+  type TransformContext,
+  NodeTypes,
+} from '@/types/compiler-core/ast'
 import { transformBind } from './vBind'
 import { transformOn } from './vOn'
 import { createSimpleExpression, createVNodeCall } from '../ast'
@@ -58,7 +59,7 @@ export function transform(root: RootNode) {
  * @param node 当前节点
  * @param context Transform 上下文
  */
-function traverseNode(node: RootNode | Node, context: TransformContext) {
+function traverseNode(node: RootNode | TemplateChildNode, context: TransformContext) {
   context.currentNode = node
 
   // 用于存储插件返回的 exit 函数，后序执行
@@ -74,11 +75,11 @@ function traverseNode(node: RootNode | Node, context: TransformContext) {
   }
 
   switch (node.type) {
-    case 'Interpolation':
+    case NodeTypes.INTERPOLATION:
       context.helper('toDisplayString')
       break
-    case 'Element':
-    case 'Root':
+    case NodeTypes.ELEMENT:
+    case NodeTypes.ROOT:
       context.helper('createElementVNode')
       // 深度优先遍历
       traverseChildren(node, context)
@@ -115,23 +116,23 @@ export function traverseChildren(parent: RootNode | ElementNode, context: Transf
  * - 给所有非静态 SimpleExpression 节点加 `_ctx.` 前缀
  * - 同时递归处理 CompoundExpressionNode
  */
-export function transformExpression(node: RootNode | Node) {
+export function transformExpression(node: RootNode | TemplateChildNode) {
   // 处理插值表达式
-  if (node.type === 'Interpolation') {
+  if (node.type === NodeTypes.INTERPOLATION) {
     const content = node.content
-    if (content.type === 'SimpleExpression' && !content.isStatic && !isAlreadyPrefixed(content.content)) {
+    if (content.type === NodeTypes.SIMPLE_EXPRESSION && !content.isStatic && !isAlreadyPrefixed(content.content)) {
       content.content = prefixIdentifiers(content.content)
     }
   }
   // 处理元素节点中的指令表达式
-  else if (node.type === 'Element') {
+  else if (node.type === NodeTypes.ELEMENT) {
     if (!node.props) return
     for (const prop of node.props) {
-      if (prop.type === 'Directive') {
+      if (prop.type === NodeTypes.DIRECTIVE) {
         // 处理指令表达式
         if (
           prop.exp &&
-          prop.exp.type === 'SimpleExpression' &&
+          prop.exp.type === NodeTypes.SIMPLE_EXPRESSION &&
           !prop.exp.isStatic &&
           !isAlreadyPrefixed(prop.exp.content)
         ) {
@@ -140,7 +141,7 @@ export function transformExpression(node: RootNode | Node) {
         // 处理指令参数表达式
         if (
           prop.arg &&
-          prop.arg.type === 'SimpleExpression' &&
+          prop.arg.type === NodeTypes.SIMPLE_EXPRESSION &&
           !prop.arg.isStatic &&
           !isAlreadyPrefixed(prop.arg.content)
         ) {
@@ -150,7 +151,7 @@ export function transformExpression(node: RootNode | Node) {
     }
   }
   // 处理复合表达式，递归处理每个子节点
-  else if (node.type === 'CompoundExpression') {
+  else if (node.type === NodeTypes.COMPOUND_EXPRESSION) {
     for (const child of node.children) {
       if (typeof child === 'object') {
         transformExpression(child)
@@ -171,8 +172,8 @@ function isAlreadyPrefixed(content: string) {
  * @param node 当前 AST 节点
  * @param context Transform 上下文
  */
-function transformElement(node: RootNode | Node, context: TransformContext) {
-  if (node.type !== 'Element') return
+function transformElement(node: RootNode | TemplateChildNode, context: TransformContext) {
+  if (node.type !== NodeTypes.ELEMENT) return
 
   // 在后序处理时生成 codegenNode：因为要等子节点（比如文本插值）都 transform 完
   return () => {
@@ -211,7 +212,7 @@ function buildProps(
   context: TransformContext,
   props: Prop[]
 ): {
-  props: ObjectExpressionNode | null
+  props: ObjectExpression | null
   patchFlag?: string
   dynamicProps?: string[]
 } {
@@ -219,16 +220,16 @@ function buildProps(
 
   // 收集属性对象的属性节点（只处理静态属性）
   // 指令本身需要复杂的逻辑（如事件修饰符、缓存等），直接放到 properties 会失去处理机会
-  const properties: PropertyNode[] = []
+  const properties: Property[] = []
 
   for (const prop of props) {
-    if (prop.type === 'Attribute') {
+    if (prop.type === NodeTypes.ATTRIBUTE) {
       properties.push({
-        type: 'Property',
+        type: NodeTypes.JS_PROPERTY,
         key: createSimpleExpression(prop.name, true),
-        value: createSimpleExpression(prop.value, true),
+        value: createSimpleExpression(prop.value!, true),
       })
-    } else if (prop.type === 'Directive') {
+    } else if (prop.type === NodeTypes.DIRECTIVE) {
       const directiveTransform = context.directiveTransforms[prop.name]
       if (directiveTransform) {
         const { props } = directiveTransform(prop, node, context)
@@ -246,7 +247,7 @@ function buildProps(
   // 当前简化：只返回静态属性合成的对象表达式
   return {
     props: {
-      type: 'ObjectExpression',
+      type: NodeTypes.JS_OBJECT_EXPRESSION,
       properties,
     },
   }
@@ -257,7 +258,7 @@ function buildProps(
  * @param node 当前节点
  * @param context Transform 上下文
  */
-function transformText(node: RootNode | Node, context: TransformContext) {
+function transformText(node: RootNode | TemplateChildNode, context: TransformContext) {
   // TODO: 实现文本合并逻辑，现留空占位，未完成实现
 }
 
@@ -275,7 +276,7 @@ function createRootCodegen(root: RootNode, context: TransformContext) {
   if (children.length === 1) {
     const child = children[0]
     // 如果唯一的子节点是 ElementNode / VNodeCall
-    if (child.type === 'Element' && child.codegenNode) {
+    if (child.type === NodeTypes.ELEMENT && child.codegenNode) {
       root.codegenNode = child.codegenNode
     }
     //  else {

@@ -1,13 +1,15 @@
-import type {
-  ElementNode,
-  InterpolationNode,
-  Node,
-  Prop,
-  TextNode,
-  DirectiveNode,
-  RootNode,
-} from '@/types/compiler-core'
-import { createElementNode, createInterpolation, createSimpleExpression } from '../ast'
+import {
+  type ElementNode,
+  type InterpolationNode,
+  type TemplateChildNode,
+  type Prop,
+  type TextNode,
+  type DirectiveNode,
+  type RootNode,
+  NodeTypes,
+  ElementTypes,
+} from '@/types/compiler-core/ast'
+import { createElementNode, createInterpolation, createSimpleExpression, createTextNode } from '../ast'
 
 /**
  * 解析上下文，用于保存剩余待解析的模板字符串
@@ -28,9 +30,9 @@ export function baseParse(input: string): RootNode {
   return root
 }
 
-function createRoot(children: Node[], source = ''): RootNode {
+function createRoot(children: TemplateChildNode[], source = ''): RootNode {
   return {
-    type: 'Root',
+    type: NodeTypes.ROOT,
     source,
     children,
     helpers: new Set(),
@@ -58,7 +60,7 @@ function createParserContext(template: string): ParserContext {
  * @returns Element 节点，tag 为 parentTag 或 'root'
  */
 function parseChildren(context: ParserContext, parentTag?: string): ElementNode {
-  const nodes: Node[] = []
+  const nodes: TemplateChildNode[] = []
 
   // 循环解析直到遇到结束条件
   while (!isEnd(context)) {
@@ -94,11 +96,48 @@ function parseChildren(context: ParserContext, parentTag?: string): ElementNode 
     }
   }
 
-  return {
-    type: 'Element',
-    tag: parentTag || 'root',
-    children: nodes,
+  const node = createElementNode(parentTag || 'root', undefined, nodes)
+
+  // 判断是普通元素还是组件
+  const { tag } = node
+  if (tag === 'slot') {
+    node.tagType = ElementTypes.SLOT
+  } /* else if (isFragmentTemplate(node)) {
+    node.tagType = ElementTypes.TEMPLATE
+  } */ else if (isComponent(node)) {
+    node.tagType = ElementTypes.COMPONENT
   }
+
+  return node
+}
+
+/**
+ * 判断一个 AST 节点是否是组件
+ * @param node ElementNode
+ * @returns boolean
+ */
+export function isComponent(node: ElementNode): boolean {
+  const tag = node.tag
+
+  // 1. 大写字母开头（PascalCase）视为组件
+  if (/^[A-Z]/.test(tag)) {
+    return true
+  }
+
+  // 2. 可能是 kebab-case 自定义组件（比如 my-button）
+  // 规则：标签中包含 "-"（HTML 保留标签名一般不含 -，除 web component 外）
+  if (tag.includes('-')) {
+    return true
+  }
+
+  // 3. 内置组件
+  const builtInComponents = new Set(['KeepAlive', 'Teleport', 'Suspense'])
+  if (builtInComponents.has(tag)) {
+    return true
+  }
+
+  // 其他情况视为普通元素
+  return false
 }
 
 /**
@@ -169,7 +208,7 @@ function parseAttributes(attrString: string): Prop[] {
         const argStr = dirMatch[2]
 
         const dirNode: DirectiveNode = {
-          type: 'Directive',
+          type: NodeTypes.DIRECTIVE,
           name,
           // exp为空时，会保留空字符串，不会改为 true（没必要）
           // 因为 html 会将空属性视为 true
@@ -183,7 +222,7 @@ function parseAttributes(attrString: string): Prop[] {
     } else if (rawName.startsWith('@')) {
       const eventName = rawName.slice(1)
       const dirNode: DirectiveNode = {
-        type: 'Directive',
+        type: NodeTypes.DIRECTIVE,
         name: 'on',
         exp: value ? createSimpleExpression(value, false) : undefined,
         arg: createSimpleExpression(eventName, true),
@@ -194,7 +233,7 @@ function parseAttributes(attrString: string): Prop[] {
     } else if (rawName.startsWith(':')) {
       const bindName = rawName.slice(1)
       const dirNode: DirectiveNode = {
-        type: 'Directive',
+        type: NodeTypes.DIRECTIVE,
         name: 'bind',
         exp: value ? createSimpleExpression(value, false) : undefined,
         arg: createSimpleExpression(bindName, true),
@@ -205,7 +244,7 @@ function parseAttributes(attrString: string): Prop[] {
     }
 
     props.push({
-      type: 'Attribute',
+      type: NodeTypes.ATTRIBUTE,
       name: rawName,
       value,
     })
@@ -232,10 +271,7 @@ function parseText(context: ParserContext): TextNode | null {
     return null
   }
 
-  return {
-    type: 'Text',
-    content,
-  }
+  return createTextNode(content)
 }
 
 /**

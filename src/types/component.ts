@@ -1,3 +1,5 @@
+import type { RenderFunction } from './runtime-core'
+
 export interface ComponentOptions extends LicyCycleHooks {
   $type?: 'vue2' | 'vue3'
   name?: string
@@ -8,7 +10,7 @@ export interface ComponentOptions extends LicyCycleHooks {
   setup?: () => Record<string, any>
   computed?: Record<string, Function>
   watch?: Record<string, Function>
-  render?: (h: Function) => string
+  render?: RenderFunction
   props?: Record<string, any>
   directives?: Record<string, Function>
   filters?: Record<string, Function>

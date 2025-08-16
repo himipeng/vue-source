@@ -1,11 +1,12 @@
-import type {
-  DirectiveTransform,
-  DirectiveNode,
-  ElementNode,
-  TransformContext,
-  PropertyNode,
-  ExpressionNode,
-} from '@/types/compiler-core'
+import {
+  type DirectiveTransform,
+  type DirectiveNode,
+  type ElementNode,
+  type TransformContext,
+  type Property,
+  type ExpressionNode,
+  NodeTypes,
+} from '@/types/compiler-core/ast'
 import { createCompoundExpression, createObjectProperty, createSimpleExpression } from '../ast'
 
 /**
@@ -20,7 +21,7 @@ export const transformOn: DirectiveTransform = (
   dir: DirectiveNode,
   node: ElementNode,
   context: TransformContext
-): { props: PropertyNode[] } => {
+): { props: Property[] } => {
   const arg = dir.arg!
   let exp: ExpressionNode | undefined = dir.exp
   // const modifiers = dir.modifiers || []
@@ -28,14 +29,14 @@ export const transformOn: DirectiveTransform = (
   // 事件名转驼峰并加 on 前缀，比如 click -> onClick
   let eventName = ''
   if (arg.isStatic) {
-    eventName = `on${capitalize(camelize(arg.content))}`
+    eventName = `on${capitalize(camelize(arg.content!))}`
   } else {
     // 动态事件名，简单包裹
-    eventName = `on${capitalize(camelize(arg.content))}`
+    eventName = `on${capitalize(camelize(arg.content!))}`
   }
 
   // 处理空表达式，赋默认空函数
-  if (!exp || (exp.type === 'SimpleExpression' && !exp.content.trim())) {
+  if (!exp || (exp.type === NodeTypes.SIMPLE_EXPRESSION && !exp.content.trim())) {
     exp = createSimpleExpression('() => {}', false)
   } else {
     // 简单包装成箭头函数表达式 (event) => handler(event)

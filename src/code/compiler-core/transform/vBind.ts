@@ -1,4 +1,4 @@
-import type { DirectiveTransform, DirectiveNode, ElementNode, TransformContext, PropertyNode } from '@/types/compiler-core'
+import type { DirectiveTransform, DirectiveNode, ElementNode, TransformContext, Property } from '@/types/compiler-core/ast'
 import { createObjectProperty, createSimpleExpression } from '../ast'
 
 // 简化版 transformBind，只保留核心功能：将 v-bind 转成属性键值对
@@ -6,7 +6,7 @@ export const transformBind: DirectiveTransform = (
   dir: DirectiveNode,
   node: ElementNode,
   context: TransformContext
-): { props: PropertyNode[] } => {
+): { props: Property[] } => {
   const arg = dir.arg!
   let exp = dir.exp
   // const modifiers = dir.modifiers || []
@@ -15,7 +15,7 @@ export const transformBind: DirectiveTransform = (
   if (!exp) {
     // 这里简单处理为同名字符串表达式
     if (arg.isStatic) {
-      exp = createSimpleExpression(arg.content, false)
+      exp = createSimpleExpression(arg.content!, false)
     } else {
       exp = createSimpleExpression('', true)
     }

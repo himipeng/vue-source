@@ -1,4 +1,4 @@
-import type { CompilerOptions } from '@/types/compiler-core'
+import type { CompilerOptions } from '@/types/compiler-core/ast'
 import type { RenderFunction } from '@/types/runtime-core'
 import { isString } from '@/utils'
 import { baseCompile } from '@vue/compiler-core'

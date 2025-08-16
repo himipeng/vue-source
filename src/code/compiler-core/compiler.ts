@@ -1,4 +1,4 @@
-import type { RootNode } from '@/types/compiler-core'
+import type { RootNode } from '@/types/compiler-core/ast'
 import { baseParse } from './parse'
 import { isString } from '@/utils'
 import { transform } from './transform'
@@ -18,8 +18,13 @@ import { generate } from './codegen'
 export function baseCompile(source: string | RootNode) {
   // 判断传入的 source 是否为字符串，如果是，则解析成 AST，否则直接使用传入的 AST
   const ast = isString(source) ? baseParse(source) : source
+  console.log(ast)
+
   // 对 AST 进行转换，处理指令、表达式等编译阶段的转换逻辑
   transform(ast)
   // 根据转换后的 AST 生成渲染函数代码
-  return generate(ast)
+  const res = generate(ast)
+  console.log(res.code)
+
+  return res
 }

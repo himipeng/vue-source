@@ -147,7 +147,7 @@ export interface VNodeCall extends Node {
   isComponent?: boolean
 }
 
-export type PropsExpression = ExpressionNode
+export type PropsExpression = ObjectExpression | ExpressionNode
 
 /**
  * 编译器解析时用的上下文

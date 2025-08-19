@@ -7,6 +7,8 @@ import {
   type RootNode,
   type TransformContext,
   NodeTypes,
+  ElementTypes,
+  type ComponentNode,
 } from '@/types/compiler-core/ast'
 import { transformBind } from './vBind'
 import { transformOn } from './vOn'
@@ -177,15 +179,20 @@ function transformElement(node: RootNode | TemplateChildNode, context: Transform
 
   // 在后序处理时生成 codegenNode：因为要等子节点（比如文本插值）都 transform 完
   return () => {
+    const { tag, props } = node
+
+    const isComponent = node.tagType === ElementTypes.COMPONENT
+    let vnodeTag = isComponent ? resolveComponentType(node as ComponentNode, context) : `${tag}`
+
     // 结构化 props 对象表达式
-    const { props, patchFlag, dynamicProps } = buildProps(node, context, node.props || [])
+    const { props: vnodeProps, patchFlag, dynamicProps } = buildProps(node, context, props || [])
 
     // TODO: 真实源码会计算 patchFlag、dynamicProps 传入 createVNodeCall
 
     // 生成 codegenNode，children 可能已经有 codegenNode
     node.codegenNode = createVNodeCall(
-      node.tag,
-      props,
+      vnodeTag,
+      vnodeProps,
       node.children.map((child) => {
         if ('codegenNode' in child) {
           // 如果子节点已经有 codegenNode，直接使用
@@ -201,6 +208,29 @@ function transformElement(node: RootNode | TemplateChildNode, context: Transform
 }
 
 /**
+ * 解析组件tag
+ * 仅支持用户组件（普通自定义组件）
+ * 其他类型（动态组件 / 内置组件）暂时留空 TODO
+ */
+export function resolveComponentType(node: ComponentNode, context: TransformContext): string {
+  const { tag } = node
+
+  // 1. 动态组件 <component :is="...">
+  // TODO: 未来支持 resolveDynamicComponent
+  // if (...) return `resolveDynamicComponent(...)`
+
+  // 2. 内置组件 <Teleport> / <KeepAlive> / <Transition>
+  // TODO: 未来支持内置组件符号
+  // if (...) return BuiltInComponent
+
+  // 3. 用户组件（默认情况）合法化
+  // 占位，将在运行时 resolveComponent 解析为子组件
+  return `_component_${tag.replace(/[^\w]/g, (searchValue, replaceValue) => {
+    return searchValue === '-' ? '_' : tag.charCodeAt(replaceValue).toString()
+  })}`
+}
+
+/**
  * 将属性数组转换成 ObjectExpression AST，并区分静态与动态属性
  * 支持调用对应的指令转换插件 transformBind、transformOn 等
  * 返回结构化的 props 和 patchFlag 信息
@@ -212,11 +242,11 @@ function buildProps(
   context: TransformContext,
   props: Prop[]
 ): {
-  props: ObjectExpression | null
+  props: ObjectExpression | undefined
   patchFlag?: string
   dynamicProps?: string[]
 } {
-  if (props.length === 0) return { props: null }
+  if (props.length === 0) return { props: undefined }
 
   // 收集属性对象的属性节点（只处理静态属性）
   // 指令本身需要复杂的逻辑（如事件修饰符、缓存等），直接放到 properties 会失去处理机会

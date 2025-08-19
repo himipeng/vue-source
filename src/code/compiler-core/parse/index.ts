@@ -7,7 +7,6 @@ import {
   type DirectiveNode,
   type RootNode,
   NodeTypes,
-  ElementTypes,
 } from '@/types/compiler-core/ast'
 import { createElementNode, createInterpolation, createSimpleExpression, createTextNode } from '../ast'
 
@@ -96,48 +95,9 @@ function parseChildren(context: ParserContext, parentTag?: string): ElementNode 
     }
   }
 
-  const node = createElementNode(parentTag || 'root', undefined, nodes)
+  const tag = parentTag || 'root'
 
-  // 判断是普通元素还是组件
-  const { tag } = node
-  if (tag === 'slot') {
-    node.tagType = ElementTypes.SLOT
-  } /* else if (isFragmentTemplate(node)) {
-    node.tagType = ElementTypes.TEMPLATE
-  } */ else if (isComponent(node)) {
-    node.tagType = ElementTypes.COMPONENT
-  }
-
-  return node
-}
-
-/**
- * 判断一个 AST 节点是否是组件
- * @param node ElementNode
- * @returns boolean
- */
-export function isComponent(node: ElementNode): boolean {
-  const tag = node.tag
-
-  // 1. 大写字母开头（PascalCase）视为组件
-  if (/^[A-Z]/.test(tag)) {
-    return true
-  }
-
-  // 2. 可能是 kebab-case 自定义组件（比如 my-button）
-  // 规则：标签中包含 "-"（HTML 保留标签名一般不含 -，除 web component 外）
-  if (tag.includes('-')) {
-    return true
-  }
-
-  // 3. 内置组件
-  const builtInComponents = new Set(['KeepAlive', 'Teleport', 'Suspense'])
-  if (builtInComponents.has(tag)) {
-    return true
-  }
-
-  // 其他情况视为普通元素
-  return false
+  return createElementNode(tag, undefined, nodes)
 }
 
 /**

@@ -8,6 +8,7 @@ import {
   NodeTypes,
 } from '@/types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
+import { helperNameMap } from '@vue/runtime-core'
 
 /**
  * Codegen 阶段：将 transform 阶段生成的带 codegenNode 的 AST
@@ -148,7 +149,7 @@ function genModulePreamble(ast: RootNode, ctx: CodegenContext) {
   // 生成 import 语句
   push(`import { ${helpers.join(', ')} } from ${JSON.stringify(runtimeModuleName)}\n`)
   // 生成 const _xxx = xxx
-  push(`const ${helpers.map((name) => `_${name} = ${name}`).join(', ')}\n`)
+  push(`const ${helpers.map((name) => `_${helperNameMap[name]} = ${helperNameMap[name]}`).join(', ')}\n`)
 
   newline()
   push(`export `)
@@ -159,7 +160,7 @@ function genModulePreamble(ast: RootNode, ctx: CodegenContext) {
  * @param s helper 名称
  * @returns 别名字符串
  */
-const aliasHelper = (s: string) => `${s}: _${s}`
+const aliasHelper = (s: symbol) => `${helperNameMap[s]}: _${helperNameMap[s]}`
 
 /**
  * 生成渲染函数的声明部分
@@ -212,6 +213,25 @@ function genNode(node: TemplateChildNode, ctx: CodegenContext) {
 }
 
 /**
+ * 判断 tag 是否是用户组件占位符
+ * Vue3 编译阶段常用 `_component_X` 作为占位符
+ * @param tag vnode.tag
+ */
+function isComponentTag(tag: string): boolean {
+  // 简化判断：以 `_component_` 开头的都是用户组件
+  return typeof tag === 'string' && tag.startsWith('_component_')
+}
+
+/**
+ * 获取真实组件名
+ * @param tag vnode.tag
+ */
+function getComponentName(tag: string): string {
+  if (!isComponentTag(tag)) return tag
+  return tag.replace(/^_component_/, '')
+}
+
+/**
  * 生成虚拟节点调用的代码
  * @param node VNodeCall 类型节点
  * @param context 代码生成上下文
@@ -220,10 +240,19 @@ function genVNodeCall(node: any, context: CodegenContext) {
   const { push, helper } = context
   // 生成 createElementVNode 函数调用代码
   push(`${helper('createElementVNode')}(`)
-  push(JSON.stringify(node.tag))
+
+  // 参数1：type 节点类型
+  // 如果是组件，需要把 __component__xx 解析为 xx 组件的 options
+  if (isComponentTag(node.tag)) {
+    // 调用 helper 生成 resolveComponent 引用
+    const resolveComp = helper('resolveComponent')
+    push(`${resolveComp}('${getComponentName(node.tag)}', _ctx)`)
+  } else {
+    push(JSON.stringify(node.tag))
+  }
   push(', ')
 
-  // 处理节点的属性
+  // 参数2：prop 处理节点的属性
   if (node.props) {
     genNode(node.props, context)
   } else {
@@ -232,7 +261,7 @@ function genVNodeCall(node: any, context: CodegenContext) {
 
   push(', ')
 
-  // 处理节点的子节点
+  // 参数3：处理节点的子节点
   if (node.children && node.children.length) {
     if (node.children.length === 1) {
       genNode(node.children[0], context)

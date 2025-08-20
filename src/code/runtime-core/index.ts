@@ -1,2 +1,2 @@
-export * from './createElementVNode'
+export * from './helpers'
 export * from './compileToFunction'

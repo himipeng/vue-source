@@ -7,7 +7,7 @@ export interface RootNode extends Node {
   type: NodeTypes.ROOT
   source: string
   children: TemplateChildNode[]
-  helpers: Set<string>
+  helpers: Set<symbol>
   components: string[]
   directives: string[]
   hoists: (JSChildNode | null)[]
@@ -166,7 +166,7 @@ export interface TransformContext {
   /**
    * 收集的 helper 函数名称集合
    */
-  helpers: Set<string>
+  helpers: Set<symbol>
   /**
    * 当前节点的父节点
    */
@@ -179,7 +179,7 @@ export interface TransformContext {
    * 注册 helper 函数名称
    * @param name helper 名称
    */
-  helper(name: string): void
+  helper(name: symbol): void
   /**
    * 节点转换插件列表
    */

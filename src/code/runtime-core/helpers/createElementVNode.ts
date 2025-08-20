@@ -1,5 +1,5 @@
 import type { VNode } from '@/types/runtime-core'
-import { ShapeFlags } from '../shared'
+import { ShapeFlags } from '../../shared'
 
 /**
  * 创建一个虚拟节点（VNode）对象，表示一个元素或组件。
@@ -24,7 +24,7 @@ export function createElementVNode(
   children: any = null,
   patchFlag: number = 0,
   dynamicProps: string[] | null = null,
-  shapeFlag: number = ShapeFlags.ELEMENT
+  shapeFlag: ShapeFlags = ShapeFlags.ELEMENT
 ): VNode {
   // 创建基础 VNode 对象，初始化各个字段
   const vnode: VNode = {

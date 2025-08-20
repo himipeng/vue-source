@@ -64,6 +64,15 @@ export function createElementNode(
   children: ElementNode['children'],
   tagType: ElementNode['tagType'] = ElementTypes.ELEMENT
 ): ElementNode {
+  // 判断是普通元素还是组件
+  if (tag === 'slot') {
+    tagType = ElementTypes.SLOT
+  } /* else if (isFragmentTemplate(node)) {
+    tagType = ElementTypes.TEMPLATE
+  } */ else if (isComponent(tag)) {
+    tagType = ElementTypes.COMPONENT
+  }
+
   return {
     type: NodeTypes.ELEMENT,
     tag,
@@ -71,6 +80,33 @@ export function createElementNode(
     children,
     tagType,
   }
+}
+
+/**
+ * 判断一个 AST 节点是否是组件
+ * @param node ElementNode
+ * @returns boolean
+ */
+export function isComponent(tag: ElementNode['tag']): boolean {
+  // 1. 大写字母开头（PascalCase）视为组件
+  if (/^[A-Z]/.test(tag)) {
+    return true
+  }
+
+  // 2. 可能是 kebab-case 自定义组件（比如 my-button）
+  // 规则：标签中包含 "-"（HTML 保留标签名一般不含 -，除 web component 外）
+  if (tag.includes('-')) {
+    return true
+  }
+
+  // 3. 内置组件
+  const builtInComponents = new Set(['KeepAlive', 'Teleport', 'Suspense'])
+  if (builtInComponents.has(tag)) {
+    return true
+  }
+
+  // 其他情况视为普通元素
+  return false
 }
 
 export function createTextNode(content: TextNode['content']): TextNode {
@@ -83,7 +119,13 @@ export function createTextNode(content: TextNode['content']): TextNode {
 /**
  * 创建 VNode 调用表达式
  */
-export function createVNodeCall(tag: string, props: any, children: any): VNodeCall {
+export function createVNodeCall(
+  tag: VNodeCall['tag'],
+  props: VNodeCall['props'],
+  children: any,
+  _patchFlag?: any
+): VNodeCall {
+  // TODO: patchFlag 用于 diff
   return {
     type: NodeTypes.VNODE_CALL,
     tag,

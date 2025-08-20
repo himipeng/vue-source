@@ -1,3 +1,6 @@
+import type { ComponentInternalInstance, ComponentPublicInstance } from './component'
+import type { ComponentOptions } from './componentOptions'
+
 /**
  * VNode 对象类型，表示虚拟节点的结构和属性。
  * 用于描述组件或元素的虚拟表示，便于渲染和更新。
@@ -6,7 +9,7 @@ export interface VNode {
   /** 标识该对象是一个 VNode */
   __v_isVNode: true
   /** 节点类型，可以是 HTML 标签名字符串或组件对象 */
-  type: string | object
+  type: string | ComponentOptions
   /** 节点的属性对象，包含所有传递给该节点的 props */
   props: Record<string, any> | null
   /** 节点的唯一标识 key，用于优化渲染 */
@@ -25,6 +28,7 @@ export interface VNode {
   el: HTMLElement | null
   /** 上下文对象，通常绑定当前组件实例 */
   ctx: any
+  component?: ComponentInternalInstance | null
 }
 
 type VNodeChildAtom = VNode | string | number | boolean | null | undefined | void
@@ -32,4 +36,4 @@ export type VNodeArrayChildren = Array<VNodeArrayChildren | VNodeChildAtom>
 
 export type VNodeChild = VNodeChildAtom | VNodeArrayChildren
 
-export type RenderFunction = (_ctx?: object, _cache?: any) => VNodeChild
+export type RenderFunction = (_ctx?: ComponentPublicInstance | null, _cache?: any) => VNodeChild

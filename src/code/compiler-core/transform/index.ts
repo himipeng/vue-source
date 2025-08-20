@@ -13,6 +13,7 @@ import {
 import { transformBind } from './vBind'
 import { transformOn } from './vOn'
 import { createSimpleExpression, createVNodeCall } from '../ast'
+import { CREATE_ELEMENT_VNODE, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
 
 /**
  * 创建 Transform 上下文
@@ -29,7 +30,7 @@ function createTransformContext(root: RootNode): TransformContext {
       // TODO: 增加更多指令转换插件，如 v-model, v-show 等
     },
 
-    helper(name: string) {
+    helper(name: symbol) {
       context.helpers.add(name)
     },
     currentNode: root,
@@ -52,7 +53,8 @@ export function transform(root: RootNode) {
 
   // 把收集到的 helper 转成数组赋给 root
   // root.helpers = [...context.helpers]
-  root.helpers = new Set([...context.helpers.keys()])
+  // root.helpers = new Set([...context.helpers.keys()])
+  root.helpers = context.helpers
 }
 
 /**
@@ -78,11 +80,11 @@ function traverseNode(node: RootNode | TemplateChildNode, context: TransformCont
 
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
-      context.helper('toDisplayString')
+      context.helper(TO_DISPLAY_STRING)
       break
     case NodeTypes.ELEMENT:
     case NodeTypes.ROOT:
-      context.helper('createElementVNode')
+      context.helper(CREATE_ELEMENT_VNODE)
       // 深度优先遍历
       traverseChildren(node, context)
       break
@@ -225,6 +227,7 @@ export function resolveComponentType(node: ComponentNode, context: TransformCont
 
   // 3. 用户组件（默认情况）合法化
   // 占位，将在运行时 resolveComponent 解析为子组件
+  context.helper(RESOLVE_COMPONENT)
   return `_component_${tag.replace(/[^\w]/g, (searchValue, replaceValue) => {
     return searchValue === '-' ? '_' : tag.charCodeAt(replaceValue).toString()
   })}`

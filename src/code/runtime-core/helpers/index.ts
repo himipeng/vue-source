@@ -1,3 +1,4 @@
+export * from './createVNode'
 export * from './createElementVNode'
 export * from './resolveComponent'
 export { toDisplayString } from '@vue/shared'
@@ -13,7 +14,12 @@ export const TO_DISPLAY_STRING: unique symbol = Symbol('toDisplayString')
 export const RESOLVE_COMPONENT: unique symbol = Symbol('resolveComponent')
 
 /**
- * 用于创建虚拟节点 VNode，相当于 Vue 的 h() 或 createVNode
+ * 用于创建虚拟节点 VNode，相当于 Vue 的 h()
+ */
+export const CREATE_VNODE: unique symbol = Symbol('createVNode')
+
+/**
+ * 用于创建普通元素的虚拟节点
  */
 export const CREATE_ELEMENT_VNODE: unique symbol = Symbol('createElementVNode')
 
@@ -25,5 +31,6 @@ export const CREATE_ELEMENT_VNODE: unique symbol = Symbol('createElementVNode')
 export const helperNameMap: Record<symbol, string> = {
   [TO_DISPLAY_STRING]: 'toDisplayString',
   [RESOLVE_COMPONENT]: 'resolveComponent',
+  [CREATE_VNODE]: 'createVNode',
   [CREATE_ELEMENT_VNODE]: 'createElementVNode',
 }

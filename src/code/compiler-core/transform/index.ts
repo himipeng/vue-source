@@ -13,7 +13,7 @@ import {
 import { transformBind } from './vBind'
 import { transformOn } from './vOn'
 import { createSimpleExpression, createVNodeCall } from '../ast'
-import { CREATE_ELEMENT_VNODE, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
+import { CREATE_VNODE, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
 
 /**
  * 创建 Transform 上下文
@@ -84,7 +84,7 @@ function traverseNode(node: RootNode | TemplateChildNode, context: TransformCont
       break
     case NodeTypes.ELEMENT:
     case NodeTypes.ROOT:
-      context.helper(CREATE_ELEMENT_VNODE)
+      context.helper(CREATE_VNODE)
       // 深度优先遍历
       traverseChildren(node, context)
       break

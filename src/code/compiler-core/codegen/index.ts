@@ -8,7 +8,7 @@ import {
   NodeTypes,
 } from '@/types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
-import { helperNameMap } from '@vue/runtime-core'
+import { CREATE_VNODE, helperNameMap, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
 
 /**
  * Codegen 阶段：将 transform 阶段生成的带 codegenNode 的 AST
@@ -42,7 +42,7 @@ interface CodegenContext {
   /** 减少缩进级别 */
   deindent: () => void
   /** 获取 runtime helper 的本地引用 */
-  helper(key: string): string
+  helper(key: symbol): string
 }
 
 /**
@@ -84,9 +84,9 @@ function createCodegenContext(ast: RootNode, options?: CodegenOptions): CodegenC
     deindent() {
       indentLevel = Math.max(0, indentLevel - 1)
     },
-    helper(key: string) {
+    helper(key: symbol) {
       // 对应转换阶段收集的辅助函数，避免与用户变量冲突
-      return `_${key}`
+      return `_${helperNameMap[key]}`
     },
   }
 
@@ -239,13 +239,13 @@ function getComponentName(tag: string): string {
 function genVNodeCall(node: any, context: CodegenContext) {
   const { push, helper } = context
   // 生成 createElementVNode 函数调用代码
-  push(`${helper('createElementVNode')}(`)
+  push(`${helper(CREATE_VNODE)}(`)
 
   // 参数1：type 节点类型
   // 如果是组件，需要把 __component__xx 解析为 xx 组件的 options
   if (isComponentTag(node.tag)) {
     // 调用 helper 生成 resolveComponent 引用
-    const resolveComp = helper('resolveComponent')
+    const resolveComp = helper(RESOLVE_COMPONENT)
     push(`${resolveComp}('${getComponentName(node.tag)}', _ctx)`)
   } else {
     push(JSON.stringify(node.tag))
@@ -340,7 +340,7 @@ function genExpression(node: SimpleExpressionNode, context: CodegenContext) {
  * @param ctx Codegen 上下文
  */
 function genInterpolation(node: InterpolationNode, context: CodegenContext) {
-  context.push(`${context.helper('toDisplayString')}(`)
+  context.push(`${context.helper(TO_DISPLAY_STRING)}(`)
   genNode(node.content, context)
   context.push(`)`)
 }

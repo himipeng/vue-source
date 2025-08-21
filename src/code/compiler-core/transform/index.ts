@@ -9,11 +9,13 @@ import {
   NodeTypes,
   ElementTypes,
   type ComponentNode,
+  type CompoundExpressionNode,
+  type NodeTransform,
 } from '@/types/compiler-core/ast'
 import { transformBind } from './vBind'
 import { transformOn } from './vOn'
-import { createSimpleExpression, createVNodeCall } from '../ast'
-import { CREATE_VNODE, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
+import { createCallExpression, createCompoundExpression, createSimpleExpression, createVNodeCall, isText } from '../ast'
+import { CREATE_TEXT, CREATE_VNODE, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
 
 /**
  * 创建 Transform 上下文
@@ -32,6 +34,7 @@ function createTransformContext(root: RootNode): TransformContext {
 
     helper(name: symbol) {
       context.helpers.add(name)
+      return name
     },
     currentNode: root,
   }
@@ -158,7 +161,7 @@ export function transformExpression(node: RootNode | TemplateChildNode) {
   else if (node.type === NodeTypes.COMPOUND_EXPRESSION) {
     for (const child of node.children) {
       if (typeof child === 'object') {
-        transformExpression(child)
+        transformExpression(child as any)
       }
     }
   }
@@ -287,12 +290,66 @@ function buildProps(
 }
 
 /**
- * 插件示例：合并相邻文本节点
- * @param node 当前节点
- * @param context Transform 上下文
+ * transformText
+ *
+ * 该 transform 的主要职责：
+ * 1. 合并相邻的文本节点（TEXT / INTERPOLATION）
+ * 2. 将文本节点预转换成 `createTextVNode` 调用，避免 runtime 再做 normalize
  */
-function transformText(node: RootNode | TemplateChildNode, context: TransformContext) {
-  // TODO: 实现文本合并逻辑，现留空占位，未完成实现
+export const transformText: NodeTransform = (node, context) => {
+  // 只处理这些节点，它们可能包含文本 children
+  if (node.type === NodeTypes.ROOT || node.type === NodeTypes.ELEMENT) {
+    // 在退出阶段处理（确保插值表达式已经 transform 完成）
+    return () => {
+      const children = node.children
+      let currentContainer: CompoundExpressionNode | undefined = undefined
+
+      // 1. 遍历 children，合并相邻的文本，合并成一个 COMPOUND_EXPRESSION
+      // 目的：避免运行时创建多个 text vnode，节省 patch 时的对比开销
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i]
+        if (isText(child)) {
+          // 向后查找相邻的文本节点
+          for (let j = i + 1; j < children.length; j++) {
+            const next = children[j]
+            if (isText(next)) {
+              // 如果是第一次合并，创建一个 CompoundExpression
+              if (!currentContainer) {
+                currentContainer = children[i] = createCompoundExpression(
+                  [child] // 初始子节点
+                )
+              }
+              // 将下一个节点合并进来
+              currentContainer.children.push(` + `, next)
+              children.splice(j, 1) // 移除已合并的节点
+              j--
+            } else {
+              currentContainer = undefined
+              break
+            }
+          }
+        }
+      }
+
+      // 2. 将 TEXT 或 COMPOUND_EXPRESSION 转换成 TEXT_CALL
+      // 目的：在 codegen 阶段 能一眼识别“这是个文本 vnode”
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i]
+        if (isText(child) || child.type === NodeTypes.COMPOUND_EXPRESSION) {
+          children[i] = {
+            type: NodeTypes.TEXT_CALL,
+            content: child,
+            loc: child.loc,
+            // 生成 codegenNode => createTextVNode(...)
+            codegenNode: createCallExpression(
+              context.helper(CREATE_TEXT), // runtime helper
+              [child] // 参数为文本本身
+            ),
+          }
+        }
+      }
+    }
+  }
 }
 
 /**

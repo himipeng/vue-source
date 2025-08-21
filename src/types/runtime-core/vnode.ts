@@ -9,7 +9,7 @@ export interface VNode {
   /** 标识该对象是一个 VNode */
   __v_isVNode: true
   /** 节点类型，可以是 HTML 标签名字符串或组件对象 */
-  type: string | ComponentOptions
+  type: string | symbol | ComponentOptions
   /** 节点的属性对象，包含所有传递给该节点的 props */
   props: Record<string, any> | null
   /** 节点的唯一标识 key，用于优化渲染 */

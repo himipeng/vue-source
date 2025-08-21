@@ -6,9 +6,14 @@ import {
   type RootNode,
   type CompoundExpressionNode,
   NodeTypes,
+  type VNodeCall,
+  type JSChildNode,
+  type CallExpression,
+  type CodegenNode,
 } from '@/types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
 import { CREATE_VNODE, helperNameMap, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
+import { isArray, isString, isSymbol } from '@/utils'
 
 /**
  * Codegen 阶段：将 transform 阶段生成的带 codegenNode 的 AST
@@ -42,7 +47,7 @@ interface CodegenContext {
   /** 减少缩进级别 */
   deindent: () => void
   /** 获取 runtime helper 的本地引用 */
-  helper(key: symbol): string
+  helper(key: symbol | string): string
 }
 
 /**
@@ -185,8 +190,19 @@ function genFunctionPreamble(ast: RootNode, ctx: CodegenContext) {
  * @param node codegenNode 节点
  * @param ctx Codegen 上下文
  */
-function genNode(node: TemplateChildNode, ctx: CodegenContext) {
+function genNode(node: TemplateChildNode | JSChildNode | symbol | string, ctx: CodegenContext) {
   if (!node) return
+
+  if (isString(node)) {
+    ctx.push(node)
+    return
+  }
+
+  if (isSymbol(node)) {
+    ctx.push(ctx.helper(node))
+    return
+  }
+
   switch (node.type) {
     case NodeTypes.VNODE_CALL:
       genVNodeCall(node, ctx)
@@ -205,6 +221,12 @@ function genNode(node: TemplateChildNode, ctx: CodegenContext) {
       break
     case NodeTypes.COMPOUND_EXPRESSION:
       genCompoundExpression(node, ctx)
+      break
+    case NodeTypes.TEXT_CALL:
+      genNode(node.codegenNode, ctx)
+      break
+    case NodeTypes.JS_CALL_EXPRESSION:
+      genCallExpression(node, ctx)
       break
     default:
       // TODO: 拓展其他类型
@@ -236,7 +258,7 @@ function getComponentName(tag: string): string {
  * @param node VNodeCall 类型节点
  * @param context 代码生成上下文
  */
-function genVNodeCall(node: any, context: CodegenContext) {
+function genVNodeCall(node: VNodeCall, context: CodegenContext) {
   const { push, helper } = context
   // 生成 createElementVNode 函数调用代码
   push(`${helper(CREATE_VNODE)}(`)
@@ -262,17 +284,29 @@ function genVNodeCall(node: any, context: CodegenContext) {
   push(', ')
 
   // 参数3：处理节点的子节点
-  if (node.children && node.children.length) {
-    if (node.children.length === 1) {
-      genNode(node.children[0], context)
+  // if (Array.isArray(node.children)) {
+  //   // 多个子节点 -> 数组
+  //   genChildrenArray(node.children, context)
+  // } else if (typeof node.children === 'string') {
+  //   // 文本子节点 -> JSON.stringify
+  //   push(JSON.stringify(node.children))
+  // } else if (node.children) {
+  //   // 单个节点 -> 递归生成
+  //   genNode(node.children, context)
+  // } else {
+  //   push('null')
+  // }
+
+  const children = node.children
+  if (isArray(children)) {
+    if (children.length === 1) {
+      genNode(children[0], context)
     } else {
-      push('[')
-      node.children.forEach((child: any, i: number) => {
-        genNode(child, context)
-        if (i < node.children.length - 1) push(', ')
-      })
-      push(']')
+      genNodeListAsArray(children, context)
     }
+  } else if (typeof node.children === 'string') {
+    // 文本子节点 -> JSON.stringify
+    push(JSON.stringify(node.children))
   } else {
     push('null')
   }
@@ -343,4 +377,81 @@ function genInterpolation(node: InterpolationNode, context: CodegenContext) {
   context.push(`${context.helper(TO_DISPLAY_STRING)}(`)
   genNode(node.content, context)
   context.push(`)`)
+}
+
+/**
+ * 生成函数调用表达式的代码
+ * @param node 要生成的 CallExpression AST 节点
+ * @param context Codegen 上下文，包含 push、helper、pure 等信息
+ */
+export function genCallExpression(node: CallExpression, context: CodegenContext) {
+  const { push, helper } = context
+  // 1. 处理 callee：如果是字符串，直接用；如果是 symbol，调用 helper 注册
+  const callee = helper(node.callee)
+
+  // 2. 输出函数名和左括号
+  push(callee + '(')
+
+  // 3. 输出参数列表
+  genNodeList(node.arguments, context)
+
+  // 4. 输出右括号结束函数调用
+  push(')')
+}
+
+/**
+ * 生成节点列表代码，用于函数调用、数组参数或对象属性等场景
+ * @param nodes 节点列表，可以是字符串、symbol、CodegenNode 或嵌套的 TemplateChildNode 数组
+ * @param context Codegen 上下文，包含 push、newline、helper 等方法
+ * @param multilines 是否多行输出（每个节点换行）
+ * @param comma 是否在节点之间加逗号
+ */
+export function genNodeList(
+  nodes: (string | symbol | CodegenNode | TemplateChildNode[] | InterpolationNode)[],
+  context: CodegenContext,
+  multilines: boolean = false,
+  comma: boolean = true
+) {
+  const { push, newline } = context
+
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i]
+
+    // 1. 判断节点类型并调用对应生成函数
+    if (isString(node)) {
+      // 字符串直接输出
+      push(node)
+    } else if (isArray(node)) {
+      // 嵌套数组递归生成
+      genNodeListAsArray(node, context)
+    } else {
+      // 其他 CodegenNode 或 TemplateChildNode 调用通用生成器
+      genNode(node, context)
+    }
+
+    // 2. 如果不是最后一个节点，根据配置输出逗号和换行
+    if (i < nodes.length - 1) {
+      if (multilines) {
+        comma && push(',')
+        newline()
+      } else {
+        comma && push(', ')
+      }
+    }
+  }
+}
+
+/**
+ * 将节点列表生成数组字面量代码
+ * @param nodes - 要生成的节点列表，可包含字符串、CodegenNode 或嵌套数组
+ * @param context - 代码生成上下文
+ */
+function genNodeListAsArray(nodes: (string | CodegenNode | TemplateChildNode[])[], context: CodegenContext) {
+  // 输出数组左括号
+  context.push(`[`)
+
+  // 调用 genNodeList 生成数组元素
+  genNodeList(nodes, context)
+
+  context.push(`]`) // 输出数组右括号
 }

@@ -1,11 +1,13 @@
 import {
   ElementTypes,
   NodeTypes,
+  type CallExpression,
   type CompoundExpressionNode,
   type ElementNode,
   type InterpolationNode,
   type Property,
   type SimpleExpressionNode,
+  type TemplateChildNode,
   type TextNode,
   type VNodeCall,
 } from '@/types/compiler-core/ast'
@@ -48,6 +50,20 @@ export function createCompoundExpression(children: CompoundExpressionNode['child
   return {
     type: NodeTypes.COMPOUND_EXPRESSION,
     children,
+  }
+}
+
+/**
+ * 创建一个 JS 调用表达式 AST 节点
+ * @param callee 调用的函数名，可以是字符串或 runtime helper 符号
+ * @param args 调用参数数组
+ * @returns CallExpression AST 节点
+ */
+export function createCallExpression(callee: string | symbol, args: any[] = []): CallExpression {
+  return {
+    type: NodeTypes.JS_CALL_EXPRESSION,
+    callee,
+    arguments: args,
   }
 }
 
@@ -182,4 +198,8 @@ export interface CodegenOptions {
    * 模板源代码（用于生成代码位置映射）
    */
   source?: string
+}
+
+export function isText(node: TemplateChildNode): node is TextNode | InterpolationNode {
+  return node.type === NodeTypes.INTERPOLATION || node.type === NodeTypes.TEXT
 }

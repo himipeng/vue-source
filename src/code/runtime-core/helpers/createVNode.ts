@@ -1,4 +1,4 @@
-import type { VNode } from '@/types/runtime-core'
+import type { ComponentOptions, VNode } from '@/types/runtime-core'
 import { PatchFlags, ShapeFlags } from '../../shared'
 
 /**
@@ -14,7 +14,7 @@ import { PatchFlags, ShapeFlags } from '../../shared'
  * @returns 返回构建好的 VNode 对象，包含节点的所有信息。
  */
 export function createVNode(
-  type: string | object,
+  type: string | symbol | ComponentOptions,
   props: Record<string, any> | null = null,
   children: any = null,
   patchFlag: PatchFlags | 0 = 0,

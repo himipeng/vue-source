@@ -1,5 +1,7 @@
 export const isString = (val: unknown): val is string => typeof val === 'string'
 
+export const isSymbol = (val: unknown): val is symbol => typeof val === 'symbol'
+
 export const isArray: typeof Array.isArray = Array.isArray
 
 export const isObject = (val: unknown): val is Record<any, any> => val !== null && typeof val === 'object'

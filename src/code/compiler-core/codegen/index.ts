@@ -299,11 +299,7 @@ function genVNodeCall(node: VNodeCall, context: CodegenContext) {
 
   const children = node.children
   if (isArray(children)) {
-    if (children.length === 1) {
-      genNode(children[0], context)
-    } else {
-      genNodeListAsArray(children, context)
-    }
+    genNodeListAsArray(children, context)
   } else if (typeof node.children === 'string') {
     // 文本子节点 -> JSON.stringify
     push(JSON.stringify(node.children))

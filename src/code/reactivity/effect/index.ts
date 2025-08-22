@@ -1,4 +1,4 @@
-import ReactiveEffect from './ReactiveEffect'
+import { ReactiveEffect } from './ReactiveEffect'
 
 /**
  * 注册副作用函数，并立即执行一次，触发依赖收集
@@ -8,3 +8,5 @@ export function effect(fn: () => void) {
   eff.run()
   return eff
 }
+
+export * from './ReactiveEffect'

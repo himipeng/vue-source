@@ -1,10 +1,10 @@
 import { createDep, type Dep } from '../dep'
-import reactive from '../reacitve'
-import ReactiveEffect from '../effect/ReactiveEffect'
+import { reactive } from '../reacitve'
+import { ReactiveEffect } from '../effect/ReactiveEffect'
 import { hasChanged, isObject, toRaw } from '../utils'
 
 // 观察者模式中的Subject
-export default class RefImpl<T> {
+export class RefImpl<T> {
   /** 原始值 */
   private _rawValue: T
   /** value值 */
@@ -66,6 +66,7 @@ export function triggerRefValue(target: RefImpl<any>) {
   if (dep.size === 0) {
     return
   }
+
   // console.log('triggerRefValue', dep.size, dep)
 
   // 创建一个新的 Set 防止重复执行(快照)

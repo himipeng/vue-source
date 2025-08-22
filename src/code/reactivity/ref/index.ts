@@ -1,4 +1,4 @@
-import RefImpl from './RefImpl'
+import { RefImpl } from './RefImpl'
 import { isRef } from '../utils'
 
 function createRef<T>(rawValue: T) {

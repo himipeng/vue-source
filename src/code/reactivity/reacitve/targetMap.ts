@@ -1,5 +1,5 @@
 import { createDep, type Dep } from '../dep'
-import ReactiveEffect from '../effect/ReactiveEffect'
+import { ReactiveEffect } from '../effect/ReactiveEffect'
 
 type Key = string | symbol
 type TargetMap = WeakMap<object, Map<Key, Dep>> // 所有响应式对象及其属性的依赖记录

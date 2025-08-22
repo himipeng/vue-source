@@ -1,5 +1,5 @@
-import ReactiveEffect from '../effect/ReactiveEffect'
-import type RefImpl from '../ref/RefImpl'
+import { ReactiveEffect } from '../effect/ReactiveEffect'
+import { type RefImpl } from '../ref/RefImpl'
 import { hasChanged, isFunction, isReactive, isRef } from '../utils'
 import { traverse } from './traverse'
 

@@ -4,7 +4,7 @@ import { track, trigger } from './targetMap'
 /** 用于缓存响应式对象，避免重复创建 */
 const reactiveMap = new WeakMap<object, any>()
 
-function reactive<T extends object>(target: T): T {
+export function reactive<T extends object>(target: T): T {
   if (!isObject(target)) return target
 
   // 已经被代理过的对象直接返回缓存
@@ -48,5 +48,3 @@ function reactive<T extends object>(target: T): T {
 
   return proxy
 }
-
-export default reactive

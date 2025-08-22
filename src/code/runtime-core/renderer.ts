@@ -1,8 +1,8 @@
 import type { ComponentInternalInstance, VNode, VNodeArrayChildren, VNodeChild } from '@/types/runtime-core'
 import { Text } from '@vue/runtime-core'
 import { ShapeFlags } from '@vue/shared'
-import ReactiveEffect from '../vue3/ReactiveEffect'
 import { createComponentInstance, setupComponent } from './component'
+import { ReactiveEffect } from '@vue/reactivity'
 
 /**
  * RendererOptions 表示渲染器操作宿主环境的 API
@@ -259,6 +259,7 @@ export function createRenderer<HostElement extends RendererNode>(options: Render
 
         // 1. 渲染新子树
         const nextTree = renderComponentRoot(instance)
+
         const prevTree = instance.subTree
         instance.subTree = nextTree
         // 2. Diff & 更新
@@ -272,10 +273,12 @@ export function createRenderer<HostElement extends RendererNode>(options: Render
     }
 
     // ---------------- 创建渲染副作用 ----------------
-    const effect = new ReactiveEffect(componentUpdateFn, () => {
+    const effect = new ReactiveEffect(
+      componentUpdateFn /* , () => {
       // 调度器：当依赖变化时，把更新任务放到队列中执行
-      // queueJob(instance.update)
-    })
+      queueJob(instance.update)
+    } */
+    )
 
     // instance.update 就是组件的「更新函数」
     instance.update = effect.run.bind(effect)

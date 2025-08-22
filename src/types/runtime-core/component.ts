@@ -62,6 +62,7 @@ export interface ComponentInternalInstance extends Partial<Lifecycle> {
   update: () => void
   /** 渲染函数（setup 返回或 options.render） */
   render: RenderFunction | null
+  setupState: Data
   /** 代理对象，用于处理模板中的 `this` 访问 */
   proxy: ComponentPublicInstance | null
   /** 组件的 props 数据 */

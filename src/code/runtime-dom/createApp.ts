@@ -2,6 +2,7 @@ import { createRenderer } from '@vue/runtime-core/renderer'
 import * as nodeOps from './nodeOps'
 import type { ComponentOptions } from '@/types/runtime-core'
 import { createVNode } from '@vue/runtime-core'
+import { patchProp } from './patchProp'
 
 /**
  * Vue App 实例接口
@@ -45,7 +46,7 @@ export interface App<HostElement = Element> {
   _container: HostElement | null
 }
 
-const renderer = createRenderer(nodeOps)
+const renderer = createRenderer({ ...nodeOps, patchProp })
 
 /**
  * 创建应用实例

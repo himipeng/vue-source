@@ -58,6 +58,8 @@ export interface ComponentInternalInstance extends Partial<Lifecycle> {
   subTree: VNode
   /** 渲染副作用，用于追踪依赖 */
   effect: ReactiveEffect
+  /** 待更新的vnode */
+  next: VNode | null
   /** 触发重新渲染的方法（effect.run） */
   update: () => void
   /** 渲染函数（setup 返回或 options.render） */

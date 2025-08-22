@@ -38,6 +38,7 @@ export function createComponentInstance(
     isUnmounted: false,
     appContext: null,
     setupState: {},
+    next: null,
   }
 
   // 初始化 ctx，稍后 Proxy 包装

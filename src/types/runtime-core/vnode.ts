@@ -2,6 +2,13 @@ import type { ComponentInternalInstance, ComponentPublicInstance } from './compo
 import type { ComponentOptions } from './componentOptions'
 
 /**
+ * 宿主环境中的父节点
+ */
+export interface RendererNode {
+  [key: string | symbol]: any
+}
+
+/**
  * VNode 对象类型，表示虚拟节点的结构和属性。
  * 用于描述组件或元素的虚拟表示，便于渲染和更新。
  */
@@ -25,7 +32,7 @@ export interface VNode {
   /** 动态子节点列表，用于跟踪需要动态更新的子节点 */
   dynamicChildren: VNode[] | null
   /** 真实 DOM 元素的引用，渲染后指向对应的 HTMLElement */
-  el: HTMLElement | null
+  el: RendererNode | null
   /** 上下文对象，通常绑定当前组件实例 */
   ctx: any
   component?: ComponentInternalInstance | null

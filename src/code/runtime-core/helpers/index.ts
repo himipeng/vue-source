@@ -1,8 +1,4 @@
-export * from './createVNode'
-export * from './createElementVNode'
-export * from './createTextVNode'
 export * from './resolveComponent'
-export { toDisplayString } from '@vue/shared'
 
 /**
  * 用于模板插值表达式，将值转换为字符串显示

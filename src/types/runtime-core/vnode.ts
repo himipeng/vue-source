@@ -15,7 +15,7 @@ export interface VNode {
   /** 节点的唯一标识 key，用于优化渲染 */
   key?: string | number | null
   /** 子节点，可以是字符串、单个 VNode 或 VNode 数组 */
-  children: any
+  children: string | VNodeArrayChildren | null
   /** 节点形状标记，用于描述节点类型和子节点类型 */
   shapeFlag: number
   /** Patch 标记，用于标识该节点在更新时需要优化的部分 */
@@ -31,7 +31,7 @@ export interface VNode {
   component?: ComponentInternalInstance | null
 }
 
-type VNodeChildAtom = VNode | string | number | boolean | null | undefined | void
+export type VNodeChildAtom = VNode | string | number | boolean | null | undefined | void
 export type VNodeArrayChildren = Array<VNodeArrayChildren | VNodeChildAtom>
 
 export type VNodeChild = VNodeChildAtom | VNodeArrayChildren

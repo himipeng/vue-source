@@ -1,6 +1,6 @@
 import type { VNode } from '@/types/runtime-core'
 import { ShapeFlags } from '../../shared'
-import { createVNode } from './createVNode'
+import { createVNode } from '../vnode/createVNode'
 
 /**
  * 创建一个虚拟节点（VNode）对象，表示一个元素或组件。

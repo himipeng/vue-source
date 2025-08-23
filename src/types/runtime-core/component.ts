@@ -1,5 +1,5 @@
 import type ReactiveEffect from '@vue/vue3/ReactiveEffect'
-import type { RenderFunction, VNode } from '.'
+import type { AppContext, RenderFunction, VNode } from '.'
 import type { ComponentOptions } from './componentOptions'
 
 export type Data = Record<string, unknown>
@@ -64,6 +64,7 @@ export interface ComponentInternalInstance extends Partial<Lifecycle> {
   update: () => void
   /** 渲染函数（setup 返回或 options.render） */
   render: RenderFunction | null
+  /** setup() 返回的响应式状态对象 的属性 */
   setupState: Data
   /** 代理对象，用于处理模板中的 `this` 访问 */
   proxy: ComponentPublicInstance | null
@@ -75,11 +76,9 @@ export interface ComponentInternalInstance extends Partial<Lifecycle> {
   isMounted: boolean
   /** 是否已卸载 */
   isUnmounted: boolean
-  /** 全局注册区域 */
+  /** 应用上下文类型 用于保存全局注册的组件、指令、mixins、提供的依赖等信息 */
   appContext: AppContext
 }
-
-type AppContext = any // TODO 全局注册对象
 
 /**
  * Public component instance (对外暴露的组件实例类型)

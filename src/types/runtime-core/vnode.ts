@@ -1,3 +1,4 @@
+import type { AppContext } from './app'
 import type { ComponentInternalInstance, ComponentPublicInstance } from './component'
 import type { ComponentOptions } from './componentOptions'
 
@@ -35,7 +36,10 @@ export interface VNode {
   el: RendererNode | null
   /** 上下文对象，通常绑定当前组件实例 */
   ctx: any
+  /** Vue3 内部的组件实例 */
   component?: ComponentInternalInstance | null
+  /** 应用上下文类型 */
+  appContext: AppContext | null
 }
 
 export type VNodeChildAtom = VNode | string | number | boolean | null | undefined | void

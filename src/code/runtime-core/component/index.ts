@@ -5,7 +5,7 @@ import type {
   RenderFunction,
   VNode,
 } from '@/types/runtime-core'
-import { compileToFunction } from '@vue/runtime-dom'
+import { compileToFunction, createAppContext } from '@vue/runtime-dom'
 import { proxyRefs } from '@vue/vue3/Component/proxyRefs'
 
 export * from './defineComponent'
@@ -20,10 +20,13 @@ export function createComponentInstance(
   vnode: VNode,
   parent: ComponentInternalInstance | null = null
 ): ComponentInternalInstance {
+  const type = vnode.type as ComponentOptions
+  const appContext = (parent ? parent.appContext : vnode.appContext) || createAppContext()
+
   const instance: ComponentInternalInstance = {
     uid: uid++,
     vnode,
-    type: vnode.type as ComponentOptions,
+    type,
     parent,
     root: parent ? parent.root : null!, // root 指向最顶层
     subTree: null!,
@@ -31,20 +34,24 @@ export function createComponentInstance(
     proxy: null,
     effect: null!,
     update: () => {},
-    props: vnode.props || {},
-    ctx: {},
     components: null,
     isMounted: false,
     isUnmounted: false,
-    appContext: null,
-    setupState: {},
+    appContext,
     next: null,
+
+    // 状态
+    ctx: {},
+    setupState: {},
+    props: vnode.props || {},
   }
 
   // 初始化 ctx，稍后 Proxy 包装
   instance.ctx = { _: instance }
 
   // TODO: applyOptions
+  // 用于 处理 Options API（即 data, computed, methods, watch, lifecycle hooks 等）选项的函数
+
   instance.components = (vnode.type as ComponentOptions).components!
 
   return instance

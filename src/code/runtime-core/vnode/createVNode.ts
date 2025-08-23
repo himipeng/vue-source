@@ -35,6 +35,7 @@ export function createVNode(
     dynamicChildren: null,
     el: null,
     ctx: null, // 上下文绑定，通常用于关联当前组件实例
+    appContext: null,
   }
 
   // 判断节点类型

@@ -1,66 +1,24 @@
 import { createRenderer } from '@vue/runtime-core/renderer'
 import * as nodeOps from './nodeOps'
-import type { ComponentOptions } from '@/types/runtime-core'
+import type { App, AppContext, ComponentOptions, Plugin } from '@/types/runtime-core'
 import { createVNode } from '@vue/runtime-core'
 import { patchProp } from './patchProp'
 import { isFunction } from '@/utils'
 
-/**
- * Vue App 实例接口
- */
-export interface App<HostElement = Element> {
-  /**
-   * 挂载组件到宿主元素
-   * @param rootContainer 宿主元素或选择器
-   * @returns 挂载的根组件实例
-   */
-  mount(rootContainer: HostElement | string): /* ComponentPublicInstance */ any
-  /**
-   * 卸载应用
-   */
-  unmount(): void
-  /**
-   * 注册全局组件
-   * @param name 组件名
-   * @param component 组件选项
-   */
-  component(name: string, component: ComponentOptions): this
-  /**
-   * 注册全局指令
-   * @param name 指令名
-   * @param directive 指令定义
-   */
-  directive(name: string, directive: any): this
-  /**
-   * 使用插件
-   * @param plugin 插件对象或函数
-   * @param options 插件选项
-   */
-  use(plugin: any, ...options: any[]): this
-  /**
-   * 获取应用配置
-   */
-  config?: Record<string, any>
-  /**
-   * 挂载容器
-   */
-  _container: HostElement | null
-}
-
-type PluginInstallFunction<Options = any[]> = Options extends unknown[]
-  ? (app: App, ...options: Options) => any
-  : (app: App, options: Options) => any
-
-export type ObjectPlugin<Options = any[]> = {
-  install: PluginInstallFunction<Options>
-}
-export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> & Partial<ObjectPlugin<Options>>
-
-export type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> =
-  | FunctionPlugin<P>
-  | ObjectPlugin<P>
-
+/** 渲染器 */
 const renderer = createRenderer({ ...nodeOps, patchProp })
+
+/**
+ * 创建应用上下文实例
+ */
+export function createAppContext(): AppContext {
+  return {
+    app: null as any,
+    mixins: [],
+    components: {},
+    provides: Object.create(null),
+  }
+}
 
 /**
  * 创建应用实例
@@ -71,15 +29,20 @@ const renderer = createRenderer({ ...nodeOps, patchProp })
 export function createApp(rootComponent: ComponentOptions): App {
   /** 已注册的插件 */
   const installedPlugins = new WeakSet()
+  /** 上下文，存储全局组件、指令、provide/inject 数据等 */
+  const context = createAppContext()
 
-  const app: App = {
+  const app: App = (context.app = {
     _container: null,
+    _context: context,
     mount(rootContainer: Element | string) {
       // 获取真实 DOM 容器
       const container = typeof rootContainer === 'string' ? document.querySelector(rootContainer)! : rootContainer
 
       // 1. 创建根 vnode
       const vnode = createVNode(rootComponent)
+      // 挂载上下文
+      vnode.appContext = context
 
       // 2. 调用 renderer 的 render
       renderer.render(vnode, container)
@@ -87,7 +50,9 @@ export function createApp(rootComponent: ComponentOptions): App {
       // 3. 保存挂载容器
       app._container = container
 
-      return vnode.component!.proxy
+      // 子组件在渲染时可以通过 vnode.appContext 访问全局配置、全局组件和 provide 注入的值
+
+      return vnode.component!.proxy!
     },
 
     use(plugin: Plugin, ...options: any[]) {
@@ -113,15 +78,35 @@ export function createApp(rootComponent: ComponentOptions): App {
       return app
     },
 
-    // TODO
-    unmount() {},
-    component(name: string, component: any) {
+    component(name: string, component?: ComponentOptions) {
+      if (!component) {
+        // 如果没有传 component 参数，返回已注册组件
+        return context.components[name] as any
+      }
+
+      // 如果组件已经注册，提示警告
+      if (context.components[name]) {
+        console.warn(`Component "${name}" has already been registered in target app.`)
+      }
+
+      // 注册组件
+      context.components[name] = component
+
+      // 支持链式调用
       return app
     },
+
+    // TODO
+    unmount() {},
+
     directive() {
       return app
     },
-  }
+
+    provide() {
+      return app
+    },
+  })
 
   return app
 }

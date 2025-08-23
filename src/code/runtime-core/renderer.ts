@@ -81,14 +81,21 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    * @param n2 新节点k0
    * @param container 容器
    * @param anchor 参照节点,用于 确定新节点插入的位置,为null时插入到结尾
+   * @param parentComponent 父组件实例
    */
-  function patch(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
+  function patch(
+    n1: VNode | null,
+    n2: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
     if (n1 === n2) return
 
     // 卸载节点
     if (n1 && n1.type !== n2.type) {
       // 类型不同直接卸载旧节点
-      // TODO: unmount(n1)
+      // TODO: unmount(n1, parentComponent)
       n1 = null
     }
 
@@ -96,17 +103,17 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     switch (type) {
       // TODO: 处理其他类型
       case Text:
-        processText(n1, n2, container)
+        processText(n1, n2, container, anchor)
         break
       // 处理原生元素或组件
       default:
         // 原生元素
         if (shapeFlag & ShapeFlags.ELEMENT) {
-          processElement(n1, n2, container)
+          processElement(n1, n2, container, anchor, parentComponent)
         }
         // 组件
         else if (shapeFlag & ShapeFlags.COMPONENT) {
-          processComponent(n1, n2, container)
+          processComponent(n1, n2, container, anchor, parentComponent)
         }
     }
   }
@@ -119,11 +126,17 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 处理元素 vnode
    */
-  function processElement(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
+  function processElement(
+    n1: VNode | null,
+    n2: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
     if (!n1) {
-      mountElement(n2, container, anchor)
+      mountElement(n2, container, anchor, parentComponent)
     } else {
-      patchElement(n1, n2)
+      patchElement(n1, n2, parentComponent)
     }
   }
 
@@ -133,7 +146,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    * @param n1 旧的 VNode
    * @param n2 新的 VNode
    */
-  function patchElement(n1: VNode, n2: VNode) {
+  function patchElement(n1: VNode, n2: VNode, parentComponent?: ComponentInternalInstance) {
     // 复用旧节点的真实 DOM 元素
     const el = (n2.el = n1.el!)
 
@@ -142,7 +155,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     const newProps = n2.props || {}
 
     // 更新子节点
-    patchChildren(n1, n2, el as HostElement)
+    patchChildren(n1, n2, el as HostElement, null, parentComponent)
 
     // 更新属性
     patchProps(el as HostElement, oldProps, newProps)
@@ -155,7 +168,13 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    * @param n2 新的 VNode
    * @param container 宿主 DOM 元素，用于挂载子节点
    */
-  function patchChildren(n1: VNode, n2: VNode, container: HostElement) {
+  function patchChildren(
+    n1: VNode,
+    n2: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
     const c1 = n1.children
     const c2 = n2.children
 
@@ -175,7 +194,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
       // TODO: 真实 Vue 会做 diff 优化，这里直接清空再挂载
       hostSetElementText(container, '') // 清空容器
       for (let i = 0; i < (c2 as VNodeArrayChildren).length; i++) {
-        patch(null, (c2 as VNode[])[i], container)
+        patch(null, (c2 as VNode[])[i], container, null, parentComponent)
       }
     }
   }
@@ -187,7 +206,12 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    * @param oldProps 旧属性对象
    * @param newProps 新属性对象
    */
-  function patchProps(el: HostElement, oldProps: Record<string, any>, newProps: Record<string, any>) {
+  function patchProps(
+    el: HostElement,
+    oldProps: Record<string, any>,
+    newProps: Record<string, any>,
+    parentComponent?: ComponentInternalInstance | null
+  ) {
     // 1. 更新或添加新属性
     for (const key in newProps) {
       const prev = oldProps[key]
@@ -237,7 +261,12 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 挂载元素
    */
-  function mountElement(vnode: VNode, container: HostElement, anchor: HostElement | null = null) {
+  function mountElement(
+    vnode: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
     const el = (vnode.el = hostCreateElement(vnode.type as string))
 
     // 设置文本或 children
@@ -246,13 +275,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     }
     // 在编译时，children 不会是一个 vnode，而是一个数组，即使里面只有一个
     else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-      ;(vnode.children as VNodeArrayChildren).forEach((child) => {
-        // 标准化
-        const _child = normalizeVNode(child)
-        if (!_child) return
-
-        patch(null, _child, el)
-      })
+      mountChildren(vnode.children as VNodeArrayChildren, el, null, parentComponent)
     }
 
     // props 处理
@@ -264,11 +287,33 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   }
 
   /**
+   * 挂载子节点
+   */
+  function mountChildren(
+    children: VNodeArrayChildren,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
+    for (let i = 0; i < children.length; i++) {
+      // 标准化
+      const child = (children[i] = normalizeVNode(children[i]))
+      patch(null, child, container, anchor, parentComponent)
+    }
+  }
+
+  /**
    * 处理组件 vnode
    */
-  function processComponent(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
+  function processComponent(
+    n1: VNode | null,
+    n2: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
     if (!n1) {
-      mountComponent(n2, container, anchor)
+      mountComponent(n2, container, anchor, parentComponent)
     } else {
       // TODO: 组件更新
       updateComponent(n1, n2)
@@ -278,9 +323,14 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 挂载组件
    */
-  function mountComponent(initialVNode: VNode, container: HostElement, anchor: HostElement | null = null) {
+  function mountComponent(
+    initialVNode: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null,
+    parentComponent?: ComponentInternalInstance
+  ) {
     // 1. 创建组件实例
-    const instance = (initialVNode.component = createComponentInstance(initialVNode))
+    const instance = (initialVNode.component = createComponentInstance(initialVNode, parentComponent))
 
     // 2. 初始化组件，执行 setup，得到 render
     setupComponent(instance)
@@ -372,7 +422,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
         const subTree = (instance.subTree = renderComponentRoot(instance))
 
         // 2. 挂载子树
-        patch(null, subTree, container)
+        patch(null, subTree, container, anchor, instance)
         // 3. 保存根元素引用
         initialVNode.el = subTree.el
 
@@ -391,7 +441,8 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
         const prevTree = instance.subTree
         instance.subTree = nextTree
         // 2. Diff & 更新
-        patch(prevTree, nextTree, container, anchor)
+        // TODO anchor 可能偏移
+        patch(prevTree, nextTree, container, null, instance)
         // 3. 更新根元素引用
         instance.vnode.el = nextTree.el
 

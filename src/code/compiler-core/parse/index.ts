@@ -7,7 +7,7 @@ import {
   type DirectiveNode,
   type RootNode,
   NodeTypes,
-} from '@/types/compiler-core/ast'
+} from '@vue/types/compiler-core/ast'
 import { createElementNode, createInterpolation, createSimpleExpression, createTextNode } from '../ast'
 
 /**

@@ -1,4 +1,4 @@
-import type { ComponentOptions, VNode } from '@/types/runtime-core'
+import type { ComponentOptions, VNode } from '@vue/types/runtime-core'
 import { PatchFlags, ShapeFlags } from '../../shared'
 
 /**

@@ -10,7 +10,7 @@ import {
   type JSChildNode,
   type CallExpression,
   type CodegenNode,
-} from '@/types/compiler-core/ast'
+} from '@vue/types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
 import { CREATE_VNODE, helperNameMap, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
 import { isArray, isString, isSymbol } from '@/utils'

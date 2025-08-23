@@ -1,7 +1,7 @@
 import Vue from './Vue'
 import Watcher from '../Watcher'
 import Compiler from './compiler'
-import type { ComponentOptions } from '../../../types/component'
+import type { ComponentOptions } from '../types/component'
 
 export default class Component extends Vue {
   /** 观察者 */

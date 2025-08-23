@@ -6,7 +6,7 @@ import {
   type Property,
   type ExpressionNode,
   NodeTypes,
-} from '@/types/compiler-core/ast'
+} from '@vue/types/compiler-core/ast'
 import { createCompoundExpression, createObjectProperty, createSimpleExpression } from '../ast'
 
 /**

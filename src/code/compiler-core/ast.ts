@@ -10,7 +10,7 @@ import {
   type TemplateChildNode,
   type TextNode,
   type VNodeCall,
-} from '@/types/compiler-core/ast'
+} from '@vue/types/compiler-core/ast'
 import { isString } from '../../utils'
 
 /**

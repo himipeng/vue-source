@@ -1,6 +1,6 @@
 import { createRenderer } from '@vue/runtime-core/renderer'
 import * as nodeOps from './nodeOps'
-import type { App, AppContext, ComponentOptions, Plugin } from '@/types/runtime-core'
+import type { App, AppContext, ComponentOptions, Plugin } from '@vue/types/runtime-core'
 import { createVNode } from '@vue/runtime-core'
 import { patchProp } from './patchProp'
 import { isFunction } from '@/utils'

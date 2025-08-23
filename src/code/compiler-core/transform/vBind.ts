@@ -1,4 +1,4 @@
-import type { DirectiveTransform, DirectiveNode, ElementNode, TransformContext, Property } from '@/types/compiler-core/ast'
+import type { DirectiveTransform, DirectiveNode, ElementNode, TransformContext, Property } from '@vue/types/compiler-core/ast'
 import { createObjectProperty, createSimpleExpression } from '../ast'
 
 // 简化版 transformBind，只保留核心功能：将 v-bind 转成属性键值对

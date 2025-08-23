@@ -1,4 +1,4 @@
-import type { RootNode } from '@/types/compiler-core/ast'
+import type { RootNode } from '@vue/types/compiler-core/ast'
 import { baseParse } from './parse'
 import { isString } from '@/utils'
 import { transform } from './transform'

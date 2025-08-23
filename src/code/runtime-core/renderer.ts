@@ -4,7 +4,7 @@ import type {
   VNode,
   VNodeArrayChildren,
   VNodeChild,
-} from '@/types/runtime-core'
+} from '@vue/types/runtime-core'
 import { createVNode, Text } from '@vue/runtime-core'
 import { ShapeFlags } from '@vue/shared'
 import { createComponentInstance, setupComponent } from './component'

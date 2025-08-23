@@ -1,4 +1,4 @@
-import type { ComponentOptions, ComponentPublicInstance } from '@/types/runtime-core'
+import type { ComponentOptions, ComponentPublicInstance } from '@vue/types/runtime-core'
 
 /**
  * 运行时 helper，用于根据组件名解析组件实例

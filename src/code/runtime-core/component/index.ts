@@ -4,7 +4,7 @@ import type {
   ComponentPublicInstance,
   RenderFunction,
   VNode,
-} from '@/types/runtime-core'
+} from '@vue/types/runtime-core'
 import { proxyRefs } from '@vue/reactivity/ref/proxyRefs'
 import { compileToFunction, createAppContext } from '@vue/runtime-dom'
 

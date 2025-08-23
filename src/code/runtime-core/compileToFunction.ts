@@ -1,5 +1,5 @@
-import type { CompilerOptions } from '@/types/compiler-core/ast'
-import type { RenderFunction } from '@/types/runtime-core'
+import type { CompilerOptions } from '@vue/types/compiler-core/ast'
+import type { RenderFunction } from '@vue/types/runtime-core'
 import { isString } from '@/utils'
 import { baseCompile } from '@vue/compiler-core'
 import * as runtimeDom from '@vue/runtime-dom'

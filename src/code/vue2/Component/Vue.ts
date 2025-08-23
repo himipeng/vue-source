@@ -1,4 +1,4 @@
-import type { ComponentOptions } from '../../../types/component'
+import type { ComponentOptions } from '../types/component'
 import Observer from '../Observer'
 
 class Vue<T extends ComponentOptions = ComponentOptions> {

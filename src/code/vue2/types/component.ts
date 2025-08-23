@@ -1,4 +1,4 @@
-import type { RenderFunction } from './runtime-core'
+import type { RenderFunction } from '../../types/runtime-core'
 
 export interface ComponentOptions extends LicyCycleHooks {
   $type?: 'vue2' | 'vue3'

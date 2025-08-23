@@ -1,4 +1,4 @@
-import type { VNode } from '@/types/runtime-core'
+import type { VNode } from '@vue/types/runtime-core'
 import { ShapeFlags } from '../../shared'
 import { createVNode } from '../vnode/createVNode'
 

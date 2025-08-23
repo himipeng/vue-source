@@ -11,7 +11,7 @@ import {
   type ComponentNode,
   type CompoundExpressionNode,
   type NodeTransform,
-} from '@/types/compiler-core/ast'
+} from '@vue/types/compiler-core/ast'
 import { transformBind } from './vBind'
 import { transformOn } from './vOn'
 import { createCallExpression, createCompoundExpression, createSimpleExpression, createVNodeCall, isText } from '../ast'

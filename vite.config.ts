@@ -8,6 +8,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@vue': fileURLToPath(new URL('./src/code', import.meta.url)),
       vue: fileURLToPath(new URL('./src/code', import.meta.url)),
+      'vue-router': fileURLToPath(new URL('./src/code/router', import.meta.url)),
     },
   },
 })

@@ -2,7 +2,7 @@ import type { RootNode } from '@/types/compiler-core/ast'
 import { baseParse } from './parse'
 import { isString } from '@/utils'
 import { transform } from './transform'
-import { generate } from './codegen'
+import { generate, type CodegenResult } from './codegen'
 
 /**
  * 编译模板字符串或 AST 根节点，生成渲染函数代码。
@@ -15,16 +15,15 @@ import { generate } from './codegen'
  * 2. 对 AST 进行转换，执行各种编译阶段的转换操作。
  * 3. 根据转换后的 AST 生成最终的代码字符串。
  */
-export function baseCompile(source: string | RootNode) {
+export function baseCompile(source: string | RootNode): CodegenResult {
   // 判断传入的 source 是否为字符串，如果是，则解析成 AST，否则直接使用传入的 AST
   const ast = isString(source) ? baseParse(source) : source
-  console.log(ast)
 
   // 对 AST 进行转换，处理指令、表达式等编译阶段的转换逻辑
   transform(ast)
+
   // 根据转换后的 AST 生成渲染函数代码
   const res = generate(ast)
-  console.log(res.code)
 
   return res
 }

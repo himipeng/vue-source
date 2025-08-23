@@ -80,8 +80,9 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    * @param n1 旧节点
    * @param n2 新节点k0
    * @param container 容器
+   * @param anchor 参照节点,用于 确定新节点插入的位置,为null时插入到结尾
    */
-  function patch(n1: VNode | null, n2: VNode, container: HostElement) {
+  function patch(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
     if (n1 === n2) return
 
     // 卸载节点
@@ -118,9 +119,9 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 处理元素 vnode
    */
-  function processElement(n1: VNode | null, n2: VNode, container: HostElement) {
+  function processElement(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
     if (!n1) {
-      mountElement(n2, container)
+      mountElement(n2, container, anchor)
     } else {
       patchElement(n1, n2)
     }
@@ -213,14 +214,14 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    * @param n2 新的文本 VNode，包含 children（即文本内容）。
    * @param container 父容器 DOM 节点，用于插入文本节点。
    */
-  const processText = (n1: VNode | null, n2: VNode, container: HostElement) => {
+  const processText = (n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) => {
     if (n1 == null) {
       // 挂载阶段：旧节点不存在
       // 使用宿主环境的创建文本节点 API 创建一个真实 DOM Text 节点
       n2.el = hostCreateText(n2.children as string)
 
       // 将创建好的文本节点插入到容器中指定位置
-      hostInsert(n2.el, container)
+      hostInsert(n2.el, container, anchor)
     } else {
       // 更新阶段：已有旧节点
       // 复用旧的真实 DOM 节点
@@ -236,7 +237,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 挂载元素
    */
-  function mountElement(vnode: VNode, container: HostElement) {
+  function mountElement(vnode: VNode, container: HostElement, anchor: HostElement | null = null) {
     const el = (vnode.el = hostCreateElement(vnode.type as string))
 
     // 设置文本或 children
@@ -259,15 +260,15 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
       patchProps(el, {}, vnode.props)
     }
 
-    hostInsert(el, container)
+    hostInsert(el, container, anchor)
   }
 
   /**
    * 处理组件 vnode
    */
-  function processComponent(n1: VNode | null, n2: VNode, container: HostElement) {
+  function processComponent(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
     if (!n1) {
-      mountComponent(n2, container)
+      mountComponent(n2, container, anchor)
     } else {
       // TODO: 组件更新
       updateComponent(n1, n2)
@@ -277,7 +278,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 挂载组件
    */
-  function mountComponent(initialVNode: VNode, container: HostElement) {
+  function mountComponent(initialVNode: VNode, container: HostElement, anchor: HostElement | null = null) {
     // 1. 创建组件实例
     const instance = (initialVNode.component = createComponentInstance(initialVNode))
 
@@ -285,7 +286,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     setupComponent(instance)
 
     // 3. 建立渲染副作用
-    setupRenderEffect(instance, initialVNode, container)
+    setupRenderEffect(instance, initialVNode, container, anchor)
   }
 
   /**
@@ -339,7 +340,12 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   /**
    * 为组件创建渲染副作用：首次挂载 & 响应更新
    */
-  function setupRenderEffect(instance: ComponentInternalInstance, initialVNode: VNode, container: HostElement) {
+  function setupRenderEffect(
+    instance: ComponentInternalInstance,
+    initialVNode: VNode,
+    container: HostElement,
+    anchor: HostElement | null = null
+  ) {
     /**
      * 组件的更新逻辑（首次挂载 + 更新时都会执行）
      */
@@ -385,7 +391,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
         const prevTree = instance.subTree
         instance.subTree = nextTree
         // 2. Diff & 更新
-        patch(prevTree, nextTree, container)
+        patch(prevTree, nextTree, container, anchor)
         // 3. 更新根元素引用
         instance.vnode.el = nextTree.el
 

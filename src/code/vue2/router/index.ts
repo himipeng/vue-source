@@ -1,12 +1,12 @@
+import Home from '@/views/Home'
 import type { Routes } from '../types/router'
+import Component from '@/views/Component'
+import Data from '@/views/Data'
 import HashRouter from './hashRouter'
-import Home from '../views/Home/index.ts'
-import About from '../views/Route/index.ts'
-import C1 from '../views/Route/C1.ts'
-import C2 from '../views/Route/C2.ts'
-import C11 from '../views/Route/C11.ts'
-import Component from '../views/Component/index.ts'
-import Data from '../views/Data/index.ts'
+import C11 from '@/views/Route/C11'
+import Route from '@/views/Route'
+import C1 from '@/views/Component/C1'
+import C2 from '@/views/Route/C2'
 
 const routes: Routes = [
   {
@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: '/route',
-    component: About,
+    component: Route,
     name: 'route',
     children: [
       {

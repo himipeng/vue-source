@@ -1,4 +1,4 @@
-import type { ComponentOptions } from './component'
+import type { ComponentOptions } from '../../../types/component'
 
 export interface Route {
   path: string

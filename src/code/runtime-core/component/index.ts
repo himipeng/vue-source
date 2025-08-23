@@ -5,8 +5,8 @@ import type {
   RenderFunction,
   VNode,
 } from '@/types/runtime-core'
+import { proxyRefs } from '@vue/reactivity/ref/proxyRefs'
 import { compileToFunction, createAppContext } from '@vue/runtime-dom'
-import { proxyRefs } from '@vue/vue3/Component/proxyRefs'
 
 export * from './defineComponent'
 

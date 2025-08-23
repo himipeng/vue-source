@@ -1,5 +1,5 @@
-import Component2 from '../code/vue2/Component'
-import type { Route, Routes } from '../types/router'
+import Component from "../Component"
+import type { Route, Routes } from "../types/router"
 
 interface RouteLink {
   route: Route
@@ -46,7 +46,6 @@ class HashRouter {
     if (!view) return
     const { component } = route
     if (!component) return
-    const Component =  Component2
     new Component(component).mount(view)
 
     if (child) {

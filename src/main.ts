@@ -1,17 +1,15 @@
-import Nav from './components/nav'
-import router from './router'
+import { createApp, defineComponent } from 'vue'
+import App from './App'
 import './style.css'
 
-const app = document.querySelector('#app')
-if (!app) {
-  throw new Error('can not find app')
-}
+const Counter = defineComponent({
+  name: 'counter',
+  template: `
+    <div>
+      <span>count: {{ count }}</span>
+      <button @click="increment"> + </button>
+    </div>
+  `,
+})
 
-app.innerHTML = `<div id="main">
-    <div id="nav"></div>
-    <router-view></router-view>
-  </div>`
-
-router.mount(app)
-
-new Nav(router).mount(document.querySelector('#nav') as HTMLDivElement)
+createApp(App).component('Counter', Counter).mount('#app')

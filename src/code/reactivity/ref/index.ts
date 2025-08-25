@@ -11,3 +11,5 @@ function createRef<T>(rawValue: T) {
 export function ref<T>(value: T) {
   return createRef<T>(value)
 }
+
+export { RefImpl as Ref }

@@ -8,3 +8,5 @@ export * from './runtime-core'
 export * from './runtime-dom'
 // 响应式
 export * from './reactivity'
+// 类型
+export * from './types'

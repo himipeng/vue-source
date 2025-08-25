@@ -36,7 +36,7 @@ export interface App<HostElement = Element> {
    * @param plugin 插件对象或函数
    * @param options 插件选项
    */
-  use(plugin: any, ...options: any[]): this
+  use(plugin: Plugin, ...options: any[]): this
   /**
    * 获取应用配置
    */

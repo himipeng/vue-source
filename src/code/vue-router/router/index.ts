@@ -1,14 +1,16 @@
 import { ref, type Ref, type App } from 'vue'
 import type {
-  RouterOptions,
   RouteLocationNormalizedLoaded,
-  RouteRecord,
-  RouterType as RouterType,
-  RouteLocationResolved,
   RouteLocationRaw,
-} from '../types/router'
-import type { WebHistory } from '../history'
+  RouteLocationResolved,
+  RouteRecord,
+  RouterHistory,
+  RouterMatcherType,
+  RouterOptions,
+  RouterType,
+} from '../types'
 import { parseURL, stringifyURL } from '../utils'
+import { createRouterMatcher } from '../matcher'
 
 /**
  * @class Router
@@ -20,7 +22,9 @@ export class Router implements RouterType {
   /** 路由配置 */
   private routes: RouteRecord[]
   /** history 实例 */
-  public history: WebHistory
+  private history: RouterHistory
+  /** 构造器选项 */
+  private matcher: RouterMatcherType
   /** 是否已开始监听 */
   private listening: boolean = false
   /** 构造器选项 */
@@ -30,6 +34,7 @@ export class Router implements RouterType {
     this.options = options
     this.history = options.history
     this.routes = options.routes
+    this.matcher = createRouterMatcher(this.routes)
 
     // 初始化 currentRoute
     this.currentRoute = this.getCurrentRoute()
@@ -45,14 +50,18 @@ export class Router implements RouterType {
     const locationNormalized = parseURL(this.history.location)
     const { path, fullPath, query, hash } = locationNormalized
 
+    // 使用 matcher 解析当前路径，得到 matched、params、name、meta
+    const matcherResult = this.matcher.resolve({ path })
+    const { name, params, matched, meta } = matcherResult
+
     return ref({
       path,
       fullPath,
-      name: undefined, // TODO: 匹配
+      name,
       query,
-      params: {},
-      matched: [], // TODO: 匹配
-      meta: {},
+      params,
+      matched,
+      meta,
       hash,
       href: this.history.createHref(fullPath),
     })
@@ -161,7 +170,12 @@ export class Router implements RouterType {
       resolved.query = locationNormalized.query
       resolved.href = this.history.createHref(resolved.fullPath)
 
-      // TODO: 匹配 routes
+      // 使用 matcher 匹配
+      const matcherResult = this.matcher.resolve({ path: resolved.path })
+      resolved.matched = matcherResult.matched
+      resolved.params = matcherResult.params
+      resolved.name = matcherResult.name
+      resolved.meta = matcherResult.meta
     }
     // 对象形式
     else {
@@ -179,11 +193,22 @@ export class Router implements RouterType {
       if (params) resolved.params = params
       if (query) resolved.query = Object.assign({}, resolved.query, query)
 
-      // TODO: 暂不处理动态路由 params
+      // 使用 matcher 匹配（优先按 name 匹配，否则按 path 匹配）
+      const matcherResult = this.matcher.resolve(
+        {
+          name: resolved.name,
+          path: resolved.path,
+          params: resolved.params,
+        },
+        currentLocation
+      )
+      resolved.matched = matcherResult.matched
+      resolved.params = matcherResult.params
+      resolved.name = matcherResult.name
+      resolved.meta = matcherResult.meta
+
       resolved.fullPath = stringifyURL(resolved)
       resolved.href = this.history.createHref(resolved.fullPath)
-
-      // TODO: 匹配
     }
 
     return resolved
@@ -197,7 +222,6 @@ export class Router implements RouterType {
     // TODO: 注入
     // app.provide('router', this)
     // app.provide('route', this.currentRoute)
-
     // TODO: 注册 RouterView / RouterLink 组件
   }
 }

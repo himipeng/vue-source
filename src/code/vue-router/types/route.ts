@@ -26,11 +26,12 @@ export interface RouteRecord {
 /**
  * 路由记录类型
  */
-export type RouteRecordRaw = RouteRecord
+export interface RouteRecordRaw extends RouteRecord {}
+
 /**
  * 解析后的规范化路由记录
  */
 export interface RouteRecordNormalized extends RouteRecordRaw {
-  children: RouteRecordNormalized[]
   aliasOf?: RouteRecordNormalized
+  children: RouteRecordRaw[]
 }

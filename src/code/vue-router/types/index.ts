@@ -1,2 +1,5 @@
 export * from './history'
 export * from './router'
+export * from './location'
+export * from './route'
+export * from './matcher'

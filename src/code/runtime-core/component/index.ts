@@ -3,6 +3,7 @@ import type {
   ComponentOptions,
   ComponentPublicInstance,
   RenderFunction,
+  SetupContext,
   VNode,
 } from '@vue/types/runtime-core'
 import { proxyRefs } from '@vue/reactivity/ref/proxyRefs'
@@ -46,6 +47,11 @@ export function createComponentInstance(
     ctx: {},
     setupState: {},
     props: vnode.props || {},
+
+    attrs: {},
+    slots: {},
+    emit: null!,
+    exposed: null,
   }
 
   // 初始化 ctx，稍后 Proxy 包装
@@ -70,7 +76,8 @@ export function setupComponent(instance: ComponentInternalInstance) {
     // 设置当前实例
     const reset = setCurrentInstance(instance)
     // 执行 setup
-    const setupResult = Component.setup(instance.props, { attrs: {} })
+    const setupContext = createSetupContext(instance)
+    const setupResult = Component.setup(instance.props, setupContext)
     // 恢复当前实例
     reset()
 
@@ -147,4 +154,30 @@ export const setCurrentInstance = (instance: ComponentInternalInstance) => {
     // instance.scope.off()
     currentInstance = prev
   }
+}
+
+/**
+ * 创建 setup context
+ * @param instance - 当前组件实例
+ * @returns SetupContext 对象
+ */
+export function createSetupContext(instance: ComponentInternalInstance): SetupContext {
+  return {
+    attrs: instance.attrs || {},
+    slots: instance.slots || {},
+    emit: (event: string, ...args: any[]) => {
+      const handler = instance.vnode.props?.[`on${capitalize(event)}`]
+      if (handler) handler(...args)
+    },
+    expose: (exposed?: Record<string, any>) => {
+      instance.exposed = exposed || {}
+    },
+  }
+}
+
+/**
+ * 首字母大写
+ */
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }

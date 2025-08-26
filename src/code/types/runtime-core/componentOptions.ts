@@ -1,11 +1,9 @@
-import type { RenderFunction } from './vnode'
+import type { RenderFunction, VNode } from './vnode'
 
 /**
  * 通用的组件选项定义（兼容 Vue2/Vue3）
  */
 export interface ComponentOptions extends LifecycleHooks {
-  /** 标识当前组件的风格 */
-  $type?: 'vue2' | 'vue3'
   /** 组件名 */
   name?: string
   /** 模板字符串 */
@@ -17,7 +15,7 @@ export interface ComponentOptions extends LifecycleHooks {
   /** methods */
   methods?: Record<string, (this: any, ...args: any[]) => any>
   /** Vue3 setup，兼容返回 render */
-  setup?: (props?: Record<string, any>, ctx?: any) => Record<string, any> | RenderFunction
+  setup?: (props?: Record<string, any>, ctx?: SetupContext) => Record<string, any> | RenderFunction
   /** 计算属性 */
   computed?: Record<string, () => any>
   /** 侦听器 */
@@ -56,4 +54,18 @@ interface LifecycleHooks {
   /** Vue3 */
   beforeUnmount?: () => void
   unmounted?: () => void
+}
+
+/**
+ * setup 上下文
+ */
+export interface SetupContext {
+  /** 组件的非 props 属性集合 */
+  attrs: Record<string, any>
+  /** 组件的插槽集合 */
+  slots: Record<string, ((...args: any[]) => VNode[]) | undefined>
+  /** 触发组件事件的方法 */
+  emit: (event: string, ...args: any[]) => void
+  /** 对外暴露的方法 */
+  expose: (exposed: Record<string, any>) => void
 }

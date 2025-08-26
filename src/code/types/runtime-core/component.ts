@@ -1,6 +1,7 @@
 import type { ReactiveEffect } from '@vue/reactivity'
 import type { AppContext, RenderFunction, VNode } from '.'
 import type { ComponentOptions } from './componentOptions'
+import type { Provides } from '../reactivity'
 
 export type Data = Record<string, unknown>
 export type LifecycleHook<TFn = Function> = TFn /* & SchedulerJob */[] | null
@@ -79,7 +80,16 @@ export interface ComponentInternalInstance extends Partial<Lifecycle> {
   /** 应用上下文类型 用于保存全局注册的组件、指令、mixins、提供的依赖等信息 */
   appContext: AppContext
   /** 注入 */
-  provides
+  provides: Provides
+
+  /** 组件接收到的非 prop 属性 */
+  attrs: Record<string, any>
+  /** 组件插槽 */
+  slots: Record<string, ((...args: any[]) => VNode[]) | undefined>
+  /** 暴露给父组件的对象 */
+  exposed: Record<string, any> | null
+  /** emit 函数 */
+  emit: (event: string, ...args: any[]) => void
 }
 
 /**

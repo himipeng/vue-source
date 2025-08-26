@@ -1,3 +1,4 @@
+import type { InjectionKey } from '../reactivity'
 import type { ComponentPublicInstance } from './component'
 import type { ComponentOptions } from './componentOptions'
 
@@ -18,7 +19,7 @@ export interface App<HostElement = Element> {
   /**
    * 全局注入
    */
-  provide(key: string, value: any): this
+  provide<T>(key: InjectionKey, value: T): this
   /**
    * 注册全局组件
    * @param name 组件名

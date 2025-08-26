@@ -4,6 +4,7 @@ import type { App, AppContext, ComponentOptions, Plugin } from '@vue/types/runti
 import { createVNode } from '@vue/runtime-core'
 import { patchProp } from './patchProp'
 import { isFunction } from '@/utils'
+import type { InjectionKey } from '@vue/types/reactivity'
 
 /** 渲染器 */
 const renderer = createRenderer({ ...nodeOps, patchProp })
@@ -103,7 +104,8 @@ export function createApp(rootComponent: ComponentOptions): App {
       return app
     },
 
-    provide() {
+    provide<T>(key: InjectionKey, value: T) {
+      context.provides[key] = value
       return app
     },
   })

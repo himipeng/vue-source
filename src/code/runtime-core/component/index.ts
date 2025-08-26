@@ -56,6 +56,7 @@ export function createComponentInstance(
 
   return instance
 }
+
 /**
  * 初始化组件，执行 setup / compile template
  */
@@ -64,7 +65,13 @@ export function setupComponent(instance: ComponentInternalInstance) {
 
   // setup 优先
   if (Component.setup) {
+    // 设置当前实例
+    const reset = setCurrentInstance(instance)
+    // 执行 setup
     const setupResult = Component.setup(instance.props, { attrs: {} })
+    // 恢复当前实例
+    reset()
+
     // 返回值为 render 时
     if (typeof setupResult === 'function') {
       instance.render = setupResult as RenderFunction
@@ -116,4 +123,26 @@ export function setupComponent(instance: ComponentInternalInstance) {
       return false
     },
   }) as ComponentPublicInstance
+}
+
+/** 当前正在执行的组件实例 */
+export let currentInstance: ComponentInternalInstance | null = null
+
+/**
+ * 获取当前组件实例
+ */
+export const getCurrentInstance = () => {
+  return currentInstance
+}
+
+/** 设置当前组件实例，并返回恢复函数 */
+export const setCurrentInstance = (instance: ComponentInternalInstance) => {
+  const prev = currentInstance
+  currentInstance = instance
+  // TODO: 依赖收集作用域
+  // instance.scope.on()
+  return (): void => {
+    // instance.scope.off()
+    currentInstance = prev
+  }
 }

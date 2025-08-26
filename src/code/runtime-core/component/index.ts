@@ -39,6 +39,8 @@ export function createComponentInstance(
     isUnmounted: false,
     appContext,
     next: null,
+    // 根组件继承app上下文的provides、其他继承自父组件
+    provides: parent ? parent.provides : Object.create(appContext.provides),
 
     // 状态
     ctx: {},

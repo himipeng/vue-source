@@ -1,4 +1,4 @@
-import type ReactiveEffect from '@vue/vue3/ReactiveEffect'
+import type { ReactiveEffect } from '@vue/reactivity'
 import type { AppContext, RenderFunction, VNode } from '.'
 import type { ComponentOptions } from './componentOptions'
 
@@ -78,6 +78,8 @@ export interface ComponentInternalInstance extends Partial<Lifecycle> {
   isUnmounted: boolean
   /** 应用上下文类型 用于保存全局注册的组件、指令、mixins、提供的依赖等信息 */
   appContext: AppContext
+  /** 注入 */
+  provides
 }
 
 /**

@@ -9,6 +9,9 @@ import type { ComponentOptions, ComponentPublicInstance } from '@vue/types/runti
 export function resolveComponent(name: string, ctx: ComponentPublicInstance): ComponentOptions | undefined {
   if (!ctx) return undefined
 
+  // TODO:TEMP
+  name = name.replace(/_/g, '-')
+
   // 内部实例
   const instance = ctx.$
 
@@ -24,5 +27,8 @@ export function resolveComponent(name: string, ctx: ComponentPublicInstance): Co
 
   // 3. 其他内置组件或特殊处理
   // TODO: Teleport, KeepAlive, Transition 等
+
+  // 4.无法解析组件
+  console.warn(`Failed to resolve <${name}>`)
   return undefined
 }

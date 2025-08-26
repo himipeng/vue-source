@@ -37,24 +37,24 @@ export class Router implements RouterType {
     this.matcher = createRouterMatcher(this.routes)
 
     // 初始化 currentRoute
-    this.currentRoute = this.getCurrentRoute()
+    this.currentRoute = this.initCurrentRoute()
 
     // 启动监听
     this.listen()
   }
 
   /**
-   * 获取当前路由信息
+   * 获取匹配的路由
    */
-  private getCurrentRoute() {
-    const locationNormalized = parseURL(this.history.location)
+  private getMatchedRoute(location: string): RouteLocationNormalizedLoaded {
+    const locationNormalized = parseURL(location)
     const { path, fullPath, query, hash } = locationNormalized
 
     // 使用 matcher 解析当前路径，得到 matched、params、name、meta
     const matcherResult = this.matcher.resolve({ path })
     const { name, params, matched, meta } = matcherResult
 
-    return ref({
+    return {
       path,
       fullPath,
       name,
@@ -64,7 +64,15 @@ export class Router implements RouterType {
       meta,
       hash,
       href: this.history.createHref(fullPath),
-    })
+    }
+  }
+
+  /**
+   * 初始化当前路由信息
+   */
+  private initCurrentRoute() {
+    const matchedRoute = this.getMatchedRoute(this.history.location)
+    return ref(matchedRoute)
   }
 
   /**
@@ -72,14 +80,9 @@ export class Router implements RouterType {
    */
   private listen() {
     if (this.listening) return
-    this.history.listen((to: string, from, info) => {
+    this.history.listen((to, from, info) => {
       console.log(to, from, info)
-
-      this.currentRoute.value = {
-        ...this.currentRoute.value,
-        path: to,
-        fullPath: to,
-      }
+      this.currentRoute.value = this.getMatchedRoute(to)
     })
     this.listening = true
   }
@@ -94,8 +97,6 @@ export class Router implements RouterType {
         // 先解析成规范化路由
         const resolved = this.resolve(to)
         this.history.push(resolved.fullPath)
-        // 更新 currentRoute
-        // this.currentRoute.value = resolved
         resolve()
       } catch (err) {
         reject(err)
@@ -106,11 +107,11 @@ export class Router implements RouterType {
   /**
    * 路由跳转：replace
    */
-  replace(to: string) {
-    // TODO: 支持对象形式
+  replace(to: RouteLocationRaw) {
     return new Promise<void>((resolve, reject) => {
       try {
-        this.history.replace(to)
+        const resolved = this.resolve(to)
+        this.history.replace(resolved.fullPath)
         resolve()
       } catch (err) {
         reject(err)

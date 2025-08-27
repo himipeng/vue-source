@@ -57,3 +57,11 @@ export function setText(node: Text, text: string): void {
 export function setElementText(el: Element, text: string): void {
   el.textContent = text
 }
+
+/**
+ * 创建空节点
+ * @param text 要设置的文本内容
+ */
+export function createComment(text: string): Node {
+  return document.createComment(text)
+}

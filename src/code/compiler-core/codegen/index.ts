@@ -250,7 +250,7 @@ function isComponentTag(tag: string): boolean {
  */
 function getComponentName(tag: string): string {
   if (!isComponentTag(tag)) return tag
-  return tag.replace(/^_component_/, '')
+  return tag.replace(/^_component_/, '').replace(/_/g, '-')
 }
 
 /**

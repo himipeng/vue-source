@@ -5,7 +5,7 @@ import type {
   VNodeArrayChildren,
   VNodeChild,
 } from '@vue/types/runtime-core'
-import { createVNode, Text } from '@vue/runtime-core'
+import { createVNode, Text, Comment } from '@vue/runtime-core'
 import { ShapeFlags } from '@vue/shared'
 import { createComponentInstance, setupComponent } from './component'
 import { ReactiveEffect } from '@vue/reactivity'
@@ -17,6 +17,7 @@ export interface RendererOptions<HostElement = any, HostText = any> {
   insert: (child: HostElement | HostText, parent: HostElement, anchor?: HostElement | null) => void
   remove: (child: HostElement | HostText) => void
   createElement: (tag: string) => HostElement
+  createComment: (text: string) => HostText
   createText: (text: string) => HostText
   setText: (node: HostText, text: string) => void
   setElementText: (el: HostElement, text: string) => void
@@ -36,25 +37,16 @@ export interface Renderer<HostElement = any> {
   render: (vnode: VNode | null, container: HostElement) => void
 }
 
-/**
- * 标准化vnode
- * 把 string / number 转为 Text VNode
- */
-function normalizeVNode(child: VNodeChild): VNode {
-  if (typeof child === 'string' || typeof child === 'number') {
-    return createVNode(Text, null, String(child))
-  }
-  return child as VNode
-}
-
 export function createRenderer<HostElement = RendererNode>(options: RendererOptions): Renderer {
   const {
     createText: hostCreateText,
     insert: hostInsert,
     setText: hostSetText,
     createElement: hostCreateElement,
+    createComment: hostCreateComment,
     setElementText: hostSetElementText,
     patchProp: hostPatchProp,
+    remove: hostRemove,
   } = options
 
   /**
@@ -65,14 +57,14 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
   function render(vnode: VNode | null, container: HostElement) {
     if (vnode == null) {
       // // 如果 vnode 为 null，卸载容器中的内容
-      // if (container._vnode) {
-      //   unmount(container._vnode)
-      // }
+      if ((container as RendererNode)._vnode) {
+        unmount((container as RendererNode)._vnode)
+      }
     } else {
       // patch(container._vnode || null, vnode, container)
       patch(null, vnode, container)
     }
-    // container._vnode = vnode
+    ;(container as RendererNode)._vnode = vnode
   }
 
   /**
@@ -95,7 +87,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     // 卸载节点
     if (n1 && n1.type !== n2.type) {
       // 类型不同直接卸载旧节点
-      // TODO: unmount(n1, parentComponent)
+      unmount(n1, parentComponent)
       n1 = null
     }
 
@@ -104,6 +96,9 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
       // TODO: 处理其他类型
       case Text:
         processText(n1, n2, container, anchor)
+        break
+      case Comment:
+        processCommentNode(n1, n2, container, anchor)
         break
       // 处理原生元素或组件
       default:
@@ -116,11 +111,6 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
           processComponent(n1, n2, container, anchor, parentComponent)
         }
     }
-  }
-
-  // TODO
-  function unmount(vnode: VNode) {
-    // remove(vnode.el!)
   }
 
   /**
@@ -137,6 +127,17 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
       mountElement(n2, container, anchor, parentComponent)
     } else {
       patchElement(n1, n2, parentComponent)
+    }
+  }
+
+  /**
+   * 处理空节点
+   */
+  function processCommentNode(n1: VNode | null, n2: VNode, container: HostElement, anchor: HostElement | null = null) {
+    if (n1 == null) {
+      hostInsert((n2.el = hostCreateComment((n2.children as string) || '')), container, anchor)
+    } else {
+      n2.el = n1.el
     }
   }
 
@@ -384,7 +385,19 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
    */
   function renderComponentRoot(instance: ComponentInternalInstance): VNode {
     const { render, proxy } = instance
-    return (render ? render.call(proxy, proxy) : null) as VNode
+    const result = render ? render.call(proxy, proxy) : null
+    return normalizeVNode(result)
+  }
+
+  function normalizeVNode(vnode: VNodeChild): VNode {
+    if (vnode == null || typeof vnode === 'boolean') {
+      // 生成空节点
+      return createVNode(Comment) // 创建 Comment VNode
+    } else if (typeof vnode === 'string' || typeof vnode === 'number') {
+      return createVNode(Text, null, String(vnode))
+    }
+    // TODO: 其他类型
+    return vnode as VNode
   }
 
   /**
@@ -424,7 +437,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
         // 2. 挂载子树
         patch(null, subTree, container, anchor, instance)
         // 3. 保存根元素引用
-        initialVNode.el = subTree.el
+        initialVNode.el = subTree?.el || null
 
         // TODO: mounted 生命周期钩子
         // queuePostRenderEffect(instance.m)
@@ -444,7 +457,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
         // TODO anchor 可能偏移
         patch(prevTree, nextTree, container, null, instance)
         // 3. 更新根元素引用
-        instance.vnode.el = nextTree.el
+        instance.vnode.el = nextTree?.el || null
 
         // TODO: updated 生命周期钩子
         // queuePostRenderEffect(instance.u)
@@ -463,6 +476,66 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     instance.update = effect.run.bind(effect)
     // 首次执行：直接触发一次挂载
     instance.update()
+  }
+
+  /**
+   * 卸载 VNode
+   * @param vnode 要卸载的虚拟节点
+   * @param parentComponent 父组件实例，可选
+   * @param doRemove 是否从 DOM 移除元素
+   */
+  function unmount(vnode: VNode, parentComponent?: ComponentInternalInstance, doRemove = true) {
+    const { type, children, shapeFlag } = vnode
+
+    // 处理 ref
+    // if (ref != null) {
+    //   setRef(ref, null, undefined, vnode, true)
+    // }
+
+    // 卸载组件
+    if (shapeFlag & ShapeFlags.COMPONENT) {
+      unmountComponent(vnode.component!)
+    }
+
+    // 卸载子节点
+    else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+      unmountChildren(children as VNode[], parentComponent)
+    }
+
+    // Fragment 类型的子节点
+    // if (type === Fragment) {
+    //   ;(children as VNode[]).forEach((child) => unmount(child, parentComponent))
+    // }
+
+    // 移除 DOM
+    if (doRemove && vnode.el) {
+      remove(vnode)
+    }
+  }
+
+  /**
+   * 卸载组件实例
+   */
+  function unmountComponent(instance: ComponentInternalInstance) {
+    // 卸载子组件的 subTree
+    if (instance.subTree) {
+      unmount(instance.subTree, instance)
+    }
+    // 清空实例关联
+    instance.isUnmounted = true
+  }
+
+  /**
+   * 卸载子节点
+   */
+  function unmountChildren(children: VNode[], parentComponent?: ComponentInternalInstance) {
+    for (let i = 0; i < children.length; i++) {
+      unmount(children[i], parentComponent)
+    }
+  }
+
+  function remove(vnode: VNode) {
+    hostRemove(vnode.el!)
   }
 
   return {

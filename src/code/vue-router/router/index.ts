@@ -11,6 +11,8 @@ import type {
 } from '../types'
 import { parseURL, stringifyURL } from '../utils'
 import { createRouterMatcher } from '../matcher'
+import { routerKey, routerViewLocationKey } from '../injectionSymbols'
+import { RouterLink, RouterView } from '../components'
 
 /**
  * @class Router
@@ -220,10 +222,13 @@ export class Router implements RouterType {
    * @param app Vue 应用实例
    */
   install(app: App) {
-    // TODO: 注入
-    // app.provide('router', this)
-    // app.provide('route', this.currentRoute)
-    // TODO: 注册 RouterView / RouterLink 组件
+    // 注入全局值
+    app.provide(routerKey, this)
+    app.provide(routerViewLocationKey, this.currentRoute)
+
+    // 注册 RouterView / RouterLink 组件
+    app.component('RouterLink', RouterLink)
+    app.component('RouterView', RouterView)
   }
 }
 

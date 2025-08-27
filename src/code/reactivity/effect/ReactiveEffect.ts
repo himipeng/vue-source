@@ -4,7 +4,7 @@
 import type { Dep } from '../dep'
 
 // 观察者模式中的 Observer 类
-export class ReactiveEffect {
+export class ReactiveEffect<T = any> {
   /** 是否仍处于活跃状态，控制 effect 是否还能收集依赖 */
   public active = true
   /** 记录当前这个 effect 被哪些响应式属性的 dep（依赖集合）引用了，用于在 stop() 或更新时清理依赖关系 */
@@ -20,7 +20,7 @@ export class ReactiveEffect {
   public parent: ReactiveEffect | null = null
 
   constructor(
-    public fn: () => void,
+    public fn: () => T,
     /** effect 的“更新调度器”。如果有，它接管 effect 的执行逻辑；如果没有，effect 默认立即运行。 */
     public scheduler?: () => void
   ) {}

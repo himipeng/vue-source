@@ -1,6 +1,8 @@
 import type { ComponentOptions, VNode } from '@vue/types/runtime-core'
 import { PatchFlags, ShapeFlags } from '../../shared'
 
+export const Comment: unique symbol = Symbol.for('Comment')
+
 /**
  * 创建一个虚拟节点（VNode）对象（通用）
  * 该函数用于构建渲染过程中的虚拟 DOM 结构。
@@ -21,6 +23,8 @@ export function createVNode(
   dynamicProps: string[] | null = null,
   shapeFlag: ShapeFlags | 0 = 0
 ): VNode {
+  if (!type) type = Comment
+
   // 创建基础 VNode 对象，初始化各个字段
   const vnode: VNode = {
     __v_isVNode: true,

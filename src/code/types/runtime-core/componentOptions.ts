@@ -3,7 +3,7 @@ import type { RenderFunction, VNode } from './vnode'
 /**
  * 通用的组件选项定义（兼容 Vue2/Vue3）
  */
-export interface ComponentOptions extends LifecycleHooks {
+export interface ComponentOptions<Props extends Record<string, any> = any> extends LifecycleHooks {
   /** 组件名 */
   name?: string
   /** 模板字符串 */
@@ -15,7 +15,7 @@ export interface ComponentOptions extends LifecycleHooks {
   /** methods */
   methods?: Record<string, (this: any, ...args: any[]) => any>
   /** Vue3 setup，兼容返回 render */
-  setup?: (props?: Record<string, any>, ctx?: SetupContext) => Record<string, any> | RenderFunction
+  setup?: (props: Props, ctx: SetupContext) => Record<string, any> | RenderFunction
   /** 计算属性 */
   computed?: Record<string, () => any>
   /** 侦听器 */
@@ -23,7 +23,7 @@ export interface ComponentOptions extends LifecycleHooks {
   /** 渲染函数 */
   render?: RenderFunction
   /** props 定义 */
-  props?: Record<string, any>
+  props?: Props
   /** 自定义指令 */
   directives?: Record<string, Function>
   /** Vue2 filters（Vue3 已废弃） */

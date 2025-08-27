@@ -8,6 +8,7 @@ import type {
 } from '@vue/types/runtime-core'
 import { proxyRefs } from '@vue/reactivity/ref/proxyRefs'
 import { compileToFunction, createAppContext } from '@vue/runtime-dom'
+import { capitalize } from '@vue/utils'
 
 export * from './defineComponent'
 
@@ -173,11 +174,4 @@ export function createSetupContext(instance: ComponentInternalInstance): SetupCo
       instance.exposed = exposed || {}
     },
   }
-}
-
-/**
- * 首字母大写
- */
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }

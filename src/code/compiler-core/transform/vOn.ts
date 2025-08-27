@@ -8,6 +8,7 @@ import {
   NodeTypes,
 } from '@vue/types/compiler-core/ast'
 import { createCompoundExpression, createObjectProperty, createSimpleExpression } from '../ast'
+import { camelize, capitalize } from '@vue/utils'
 
 /**
  * 简化版 transformOn，处理 v-on 指令转换为普通属性
@@ -48,14 +49,4 @@ export const transformOn: DirectiveTransform = (
   return {
     props: [prop],
   }
-}
-
-/** 字符串转驼峰 */
-function camelize(str: string): string {
-  return str.replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ''))
-}
-
-/** 首字母大写 */
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }

@@ -11,6 +11,8 @@ export interface RouteRecord {
   name?: string
   /** 路由组件，可为单个组件或命名视图对象 */
   component?: ComponentOptions
+  /** 路由组件，key 是 路由视图名称，value 是 组件对象 */
+  components?: Record<string, ComponentOptions>
   /** 嵌套路由 */
   children?: RouteRecord[]
   /** 路由元信息，可自定义存储权限、标题等信息 */
@@ -21,6 +23,8 @@ export interface RouteRecord {
   exact?: boolean
   /** 别名 */
   alias?: string | string[]
+  /** props */
+  props?: Record<string, any>
 }
 
 /**

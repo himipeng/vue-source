@@ -32,7 +32,7 @@ export function provide<T>(key: InjectionKey, value: T): void {
  * @param defaultValue 默认值（可选）暂不实现
  * @returns 注入的值或默认值
  */
-export function inject<T = any>(key: InjectionKey): T | undefined {
+export function inject<T = any>(key: InjectionKey, defaultValue?: T): T | undefined {
   const instance = getCurrentInstance()
 
   // 不处理 currentApp、app.runWithContext()
@@ -55,8 +55,9 @@ export function inject<T = any>(key: InjectionKey): T | undefined {
 
   if (provides && key in provides) {
     return provides[key]
+  } else if (defaultValue !== undefined) {
+    return defaultValue
   } else {
     console.warn(`injection "${String(key)}" not found.`)
-    return
   }
 }

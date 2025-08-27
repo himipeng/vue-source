@@ -14,7 +14,7 @@ export class RefImpl<T> {
   /** 中介容器，把 Subject 和多个 Observer 关联起来 */
   public dep: Dep = createDep()
 
-  constructor(value: T) {
+  constructor(value?: T) {
     // 保存原始值到_rawValue
     this._rawValue = toRaw(value)
     // 如果是对象（引用类型），使用reactive将对象转为响应式的（Proxy），因此将一个对象传入ref，实际上也是调用了reactive

@@ -46,7 +46,6 @@ function createTransformContext(root: RootNode): TransformContext {
  * @param root 模板 AST 根节点
  */
 export function transform(root: RootNode) {
-  // debugger
   const context = createTransformContext(root)
 
   // 从根节点开始递归遍历 AST

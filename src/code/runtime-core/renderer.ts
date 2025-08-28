@@ -9,6 +9,7 @@ import { createVNode, Text, Comment } from '@vue/runtime-core'
 import { ShapeFlags } from '@vue/shared'
 import { createComponentInstance, setupComponent } from './component'
 import { ReactiveEffect } from '@vue/reactivity'
+import { queueJob } from '@vue/reactivity/scheduler'
 
 /**
  * RendererOptions 表示渲染器操作宿主环境的 API
@@ -465,12 +466,10 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
     }
 
     // ---------------- 创建渲染副作用 ----------------
-    const effect = new ReactiveEffect(
-      componentUpdateFn /* , () => {
-      // 调度器：当依赖变化时，把更新任务放到队列中执行
-      queueJob(instance.update)
-    } */
-    )
+    const effect = new ReactiveEffect(componentUpdateFn)
+    // 加入异步调度
+    const job = () => effect.run()
+    effect.scheduler = () => queueJob(job)
 
     // instance.update 就是组件的「更新函数」
     instance.update = effect.run.bind(effect)

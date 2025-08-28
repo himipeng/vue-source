@@ -1,4 +1,4 @@
-import { ReactiveEffect } from '../effect'
+import { activeEffect, ReactiveEffect } from '../effect'
 
 /**
  * Dep 依赖管理器
@@ -23,16 +23,16 @@ export class Dep {
    */
   track() {
     // 如果没有激活的 effect，或者禁止追踪，则不收集
-    if (!ReactiveEffect.activeEffect) {
+    if (!activeEffect) {
       return
     }
 
     // 将当前 effect 添加到 dep.subs
-    if (!this.subs.has(ReactiveEffect.activeEffect)) {
-      this.subs.add(ReactiveEffect.activeEffect)
+    if (!this.subs.has(activeEffect)) {
+      this.subs.add(activeEffect)
       // 同时反向记录 dep 到 effect 的依赖表
-      if (!ReactiveEffect.activeEffect.deps.includes(this)) {
-        ReactiveEffect.activeEffect.deps.push(this)
+      if (!activeEffect.deps.includes(this)) {
+        activeEffect.deps.push(this)
       }
     }
   }
@@ -47,18 +47,14 @@ export class Dep {
 
     // 收集所有订阅者（避免在运行时修改 set 导致死循环）
     this.subs.forEach((effect) => {
-      if (effect !== ReactiveEffect.activeEffect) {
+      if (effect !== activeEffect) {
         effectsToRun.add(effect)
       }
     })
 
     // 逐个执行订阅者
     effectsToRun.forEach((effect) => {
-      if (effect.scheduler) {
-        effect.scheduler()
-      } else {
-        effect.run()
-      }
+      effect.trigger()
     })
   }
 }

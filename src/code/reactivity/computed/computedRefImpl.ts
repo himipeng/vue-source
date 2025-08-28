@@ -6,7 +6,8 @@ export interface ComputedConfig<T> {
   set?: (val: T) => void
 }
 
-// TODO: 源码的 ComputedRefImpl 实际上本身是 Subscriber
+// TODO: 源码Vue 3.5+ 的 ComputedRefImpl 实际上本身是 Subscriber
+// 旧版 的 ComputedRefImpl 是一个特殊的 RefImpl
 export default class ComputedRefImpl<T = any> {
   /**  value 值 */
   private _value: T

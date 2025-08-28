@@ -3,6 +3,10 @@
 
 import type { Dep } from '../dep'
 
+/** 当前活跃的副作用 */
+// TODO: vue 3.5+ 依赖收集重构，activeEffect 更改为 activeSub（Subscriber）
+export let activeEffect: ReactiveEffect | null = null
+
 // 观察者模式中的 Observer 类
 export class ReactiveEffect<T = any> {
   /** 是否仍处于活跃状态，控制 effect 是否还能收集依赖 */
@@ -16,8 +20,6 @@ export class ReactiveEffect<T = any> {
   二者配合，构成了可追踪 + 可解绑的响应系统，比 Vue 2 更高效可靠。
   */
   public deps: Dep[] = []
-  /** 外层effect，用于处理嵌套effect */
-  public parent: ReactiveEffect | null = null
 
   constructor(
     public fn: () => T,
@@ -40,18 +42,18 @@ export class ReactiveEffect<T = any> {
       cleanupEffect(this)
 
       // 依赖收集
-      this.parent = ReactiveEffect.activeEffect
-      ReactiveEffect.activeEffect = this
+      const prevEffect = activeEffect
+      activeEffect = this
 
       try {
         return this.fn()
       } finally {
         // 清除依赖
-        ReactiveEffect.activeEffect = this.parent
-        this.parent = null
+        activeEffect = prevEffect
       }
     }
   }
+
   stop() {
     if (this.active) {
       cleanupEffect(this)
@@ -59,8 +61,13 @@ export class ReactiveEffect<T = any> {
     }
   }
 
-  /** 当前活跃的副作用 */
-  static activeEffect: ReactiveEffect | null = null
+  trigger() {
+    if (this.scheduler) {
+      this.scheduler()
+    } else {
+      this.run()
+    }
+  }
 }
 
 function cleanupEffect(effect: ReactiveEffect) {

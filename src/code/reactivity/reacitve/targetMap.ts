@@ -1,5 +1,5 @@
 import { Dep } from '../dep'
-import { ReactiveEffect } from '../effect/ReactiveEffect'
+import { activeEffect, type ReactiveEffect } from '../effect'
 
 type Key = string | symbol
 type TargetMap = WeakMap<object, Map<Key, Dep>> // 所有响应式对象及其属性的依赖记录
@@ -12,8 +12,7 @@ const targetMap: TargetMap = new WeakMap()
  * 每当读取响应式对象的某个属性时，触发依赖收集，把当前正在运行的 effect 与这个属性建立联系
  */
 export function track(target: object, key: Key) {
-  const effect = ReactiveEffect.activeEffect
-  if (!effect) return // 当前没有正在运行的副作用函数，直接跳过
+  if (!activeEffect) return // 当前没有正在运行的副作用函数，直接跳过
 
   // 获取 target 对应的所有属性依赖映射
   let depsMap = targetMap.get(target)
@@ -30,11 +29,11 @@ export function track(target: object, key: Key) {
   }
 
   // 建立依赖关系：effect 被添加到这个 key 的 dep 中
-  if (!dep.subs.has(effect)) {
-    dep.subs.add(effect) // key → effect
+  if (!dep.subs.has(activeEffect)) {
+    dep.subs.add(activeEffect) // key → effect
   }
-  if (!effect.deps.includes(dep)) {
-    effect.deps.push(dep) // effect → dep（双向追踪，方便后续清理）
+  if (!activeEffect.deps.includes(dep)) {
+    activeEffect.deps.push(dep) // effect → dep（双向追踪，方便后续清理）
   }
 }
 
@@ -52,7 +51,7 @@ export function trigger(target: object, key: Key) {
   const effectsToRun = new Set<ReactiveEffect>()
 
   dep.subs.forEach((effect) => {
-    if (effect !== ReactiveEffect.activeEffect) {
+    if (effect !== activeEffect) {
       effectsToRun.add(effect) // 收集所有需要重新运行的 effect
     }
   })

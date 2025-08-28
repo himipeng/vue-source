@@ -1,5 +1,6 @@
 import { ReactiveEffect } from '../effect/ReactiveEffect'
 import { type RefImpl } from '../ref/RefImpl'
+import { queueJob } from '../scheduler'
 import { hasChanged, isFunction, isReactive, isRef } from '../utils'
 import { traverse } from './traverse'
 
@@ -60,9 +61,12 @@ function doWatch(source: any, cb?: Function | null, options: WatchOptions = {}) 
     }
   }
 
+  // 加入异步调度，防止多次触发
+  const scheduler = () => queueJob(job)
+
   // 创建 ReactiveEffect
-  const effect = new ReactiveEffect(job)
-  effect.run()
+  const effect = new ReactiveEffect(job, scheduler)
+  effect.notify()
 
   return () => {
     effect.stop()

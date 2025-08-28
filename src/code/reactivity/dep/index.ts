@@ -1,4 +1,4 @@
-import { activeEffect, ReactiveEffect } from '../effect'
+import { activeEffect, endBatch, ReactiveEffect, startBatch } from '../effect'
 
 /**
  * Dep 依赖管理器
@@ -13,7 +13,7 @@ export class Dep {
   // computed?: ComputedRefImpl
 
   /** 保存订阅该 dep 的 effects */
-  // TODO: 源码为链表结构：能更高效地维护 effect 访问顺序，避免重复遍历
+  // TODO: 源码 Vue 3.4+ 换成了双向链表结构：能更高效地维护 effect 访问顺序，避免重复遍历
   subs: Set<ReactiveEffect> = new Set()
 
   constructor() {}
@@ -42,19 +42,27 @@ export class Dep {
    */
   trigger() {
     this.version++
+    this.notify()
+  }
 
-    const effectsToRun = new Set<ReactiveEffect>()
+  notify(): void {
+    startBatch()
+    try {
+      const effectsToRun = new Set<ReactiveEffect>()
 
-    // 收集所有订阅者（避免在运行时修改 set 导致死循环）
-    this.subs.forEach((effect) => {
-      if (effect !== activeEffect) {
-        effectsToRun.add(effect)
-      }
-    })
+      // 收集所有订阅者（避免在运行时修改 set 导致死循环）
+      this.subs.forEach((effect) => {
+        if (effect !== activeEffect) {
+          effectsToRun.add(effect)
+        }
+      })
 
-    // 逐个执行订阅者
-    effectsToRun.forEach((effect) => {
-      effect.trigger()
-    })
+      // 逐个执行订阅者
+      effectsToRun.forEach((effect) => {
+        effect.notify()
+      })
+    } finally {
+      endBatch()
+    }
   }
 }

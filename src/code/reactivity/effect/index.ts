@@ -10,3 +10,4 @@ export function effect(fn: () => void) {
 }
 
 export * from './ReactiveEffect'
+export * from './batch'

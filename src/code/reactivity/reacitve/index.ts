@@ -48,3 +48,7 @@ export function reactive<T extends object>(target: T): T {
 
   return proxy
 }
+
+export function toReactive(value: any) {
+  return isObject(value) ? reactive(value) : value
+}

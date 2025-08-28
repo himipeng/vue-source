@@ -59,13 +59,14 @@ export class ReactiveEffect<T = any> {
     }
   }
 
+  /** 当前活跃的副作用 */
   static activeEffect: ReactiveEffect | null = null
 }
 
 function cleanupEffect(effect: ReactiveEffect) {
   const { deps } = effect
   for (let i = 0; i < deps.length; i++) {
-    deps[i].delete(effect)
+    deps[i].subs.delete(effect)
   }
   effect.deps.length = 0
 }

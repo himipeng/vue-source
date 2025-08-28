@@ -1,4 +1,4 @@
-import { createDep, type Dep } from '../dep'
+import { Dep } from '../dep'
 import { ReactiveEffect } from '../effect/ReactiveEffect'
 
 type Key = string | symbol
@@ -25,13 +25,13 @@ export function track(target: object, key: Key) {
   // 获取指定 key 对应的依赖集合（一个 Dep，其实是 Set<ReactiveEffect>）
   let dep = depsMap.get(key)
   if (!dep) {
-    dep = createDep()
+    dep = new Dep()
     depsMap.set(key, dep)
   }
 
   // 建立依赖关系：effect 被添加到这个 key 的 dep 中
-  if (!dep.has(effect)) {
-    dep.add(effect) // key → effect
+  if (!dep.subs.has(effect)) {
+    dep.subs.add(effect) // key → effect
   }
   if (!effect.deps.includes(dep)) {
     effect.deps.push(dep) // effect → dep（双向追踪，方便后续清理）
@@ -51,7 +51,7 @@ export function trigger(target: object, key: Key) {
 
   const effectsToRun = new Set<ReactiveEffect>()
 
-  dep.forEach((effect) => {
+  dep.subs.forEach((effect) => {
     if (effect !== ReactiveEffect.activeEffect) {
       effectsToRun.add(effect) // 收集所有需要重新运行的 effect
     }

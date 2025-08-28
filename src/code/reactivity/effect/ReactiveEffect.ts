@@ -29,11 +29,10 @@ export class ReactiveEffect<T = any> {
   /** 位标志，用于表示 effect 的状态、行为和生命周期 */
   public flags: EffectFlags = EffectFlags.ACTIVE | EffectFlags.TRACKING
 
-  constructor(
-    public fn: () => T,
-    /** effect 的“更新调度器”。如果有，它接管 effect 的执行逻辑；如果没有，effect 默认立即运行。 */
-    public scheduler?: (...args: any[]) => any
-  ) {}
+  /** effect 的“更新调度器”。如果有，它接管 effect 的执行逻辑；如果没有，effect 默认立即运行。 */
+  public scheduler?: (...args: any[]) => any
+
+  constructor(public fn: () => T) {}
 
   /**
    * 执行副作用函数并收集依赖

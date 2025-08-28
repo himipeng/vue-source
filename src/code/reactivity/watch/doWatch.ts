@@ -47,7 +47,7 @@ function doWatch(source: any, cb?: Function | null, options: WatchOptions = {}) 
   const INITIAL_WATCHER_VALUE = Symbol('INITIAL_WATCHER_VALUE')
   let oldValue = INITIAL_WATCHER_VALUE
   // 执行回调函数
-  const job = () => {
+  const fn = () => {
     if (cb) {
       const newValue = getter()
       if (deep || hasChanged(newValue, oldValue)) {
@@ -61,12 +61,15 @@ function doWatch(source: any, cb?: Function | null, options: WatchOptions = {}) 
     }
   }
 
-  // 加入异步调度，防止多次触发
-  const scheduler = () => queueJob(job)
-
   // 创建 ReactiveEffect
-  const effect = new ReactiveEffect(job, scheduler)
-  effect.notify()
+  const effect = new ReactiveEffect(fn)
+
+  // 加入异步调度，防止多次触发
+  const job = () => effect.run()
+  effect.scheduler = () => queueJob(job)
+
+  // 激活依赖收集
+  effect.run()
 
   return () => {
     effect.stop()

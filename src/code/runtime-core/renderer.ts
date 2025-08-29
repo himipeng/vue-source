@@ -63,7 +63,7 @@ export function createRenderer<HostElement = RendererNode>(options: RendererOpti
       }
     } else {
       // patch(container._vnode || null, vnode, container)
-      patch(null, vnode, container)
+      patch((container as RendererNode)._vnode, vnode, container)
     }
     ;(container as RendererNode)._vnode = vnode
   }

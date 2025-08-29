@@ -9,6 +9,27 @@ import { EffectFlags } from './effectFlags'
 /** 当前活跃的副作用 */
 // TODO: vue 3.5+ 依赖收集重构，activeEffect 更改为 activeSub（Subscriber）
 export let activeEffect: ReactiveEffect | null = null
+/**
+ * 是否应该收集依赖
+ * 某些阶段需暂停收集依赖，如：执行 setup 函数
+ */
+export let shouldTrack = true
+const trackStack: boolean[] = []
+
+export function pauseTracking(): void {
+  trackStack.push(shouldTrack)
+  shouldTrack = false
+}
+
+export function enableTracking(): void {
+  trackStack.push(shouldTrack)
+  shouldTrack = true
+}
+
+export function resetTracking(): void {
+  const last = trackStack.pop()
+  shouldTrack = last === undefined ? true : last
+}
 
 /**
  * Vue 响应式系统中的“观察者”（Observer）
@@ -58,7 +79,9 @@ export class ReactiveEffect<T = any> {
 
     // 依赖收集
     const prevEffect = activeEffect
+    const prevShouldTrack = shouldTrack
     activeEffect = this
+    shouldTrack = true
 
     try {
       // 执行副作用函数，并触发函数中响应性数据的依赖收集
@@ -66,6 +89,8 @@ export class ReactiveEffect<T = any> {
     } finally {
       // 清除依赖
       activeEffect = prevEffect
+      shouldTrack = prevShouldTrack
+      this.flags &= ~EffectFlags.RUNNING
     }
   }
 

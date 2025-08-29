@@ -9,6 +9,7 @@ import type {
 import { proxyRefs } from '@vue/reactivity/ref/proxyRefs'
 import { compileToFunction, createAppContext } from '@vue/runtime-dom'
 import { capitalize } from '@vue/utils'
+import { pauseTracking, resetTracking } from '@vue/reactivity'
 
 export * from './defineComponent'
 
@@ -74,11 +75,15 @@ export function setupComponent(instance: ComponentInternalInstance) {
 
   // setup 优先
   if (Component.setup) {
+    // 暂停收集起来
+    pauseTracking()
     // 设置当前实例
     const reset = setCurrentInstance(instance)
     // 执行 setup
     const setupContext = createSetupContext(instance)
     const setupResult = Component.setup(instance.props, setupContext)
+    // 恢复收集依赖
+    resetTracking()
     // 恢复当前实例
     reset()
 

@@ -4,8 +4,10 @@ import type { RouteLocationNormalizedLoaded, RouteRecord } from '../types'
 import { matchedRouteKey, routerViewLocationKey, viewDepthKey } from '../injectionSymbols'
 
 interface Props {
-  name: string
-  route: RouteLocationNormalizedLoaded
+  /** 视图名 */
+  name?: string
+  /** 渲染路由 */
+  route?: RouteLocationNormalizedLoaded
 }
 
 export const RouterView = defineComponent<Props>({

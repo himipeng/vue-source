@@ -83,7 +83,6 @@ export class Router implements RouterType {
   private listen() {
     if (this.listening) return
     this.history.listen((to, from, info) => {
-      console.log(to, from, info)
       this.currentRoute.value = this.getMatchedRoute(to)
     })
     this.listening = true

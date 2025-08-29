@@ -1,15 +1,16 @@
-import { createApp, defineComponent } from 'vue'
-import App from './App'
 import './style.css'
+import { createApp } from 'vue'
+import App from './App'
+import router from './router'
+import Counter from './components/Counter'
 
-const Counter = defineComponent({
-  name: 'counter',
-  template: `
-    <div>
-      <span>count: {{ count }}</span>
-      <button @click="increment"> + </button>
-    </div>
-  `,
-})
+const app = createApp(App)
 
-createApp(App).component('Counter', Counter).mount('#app')
+// 插件
+app.use(router)
+
+// 全局组件
+app.component('Counter', Counter)
+
+// 挂载
+app.mount('#app')

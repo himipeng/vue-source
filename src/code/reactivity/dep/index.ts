@@ -1,4 +1,13 @@
-import { activeEffect, endBatch, ReactiveEffect, startBatch } from '../effect'
+import { activeEffect, endBatch, ReactiveEffect, shouldTrack, startBatch } from '../effect'
+
+export type DebuggerEventExtraInfo = {
+  target: object
+  type: 'track' | 'trigger'
+  key: any
+  newValue?: any
+  oldValue?: any
+  oldTarget?: Map<any, any> | Set<any>
+}
 
 /**
  * Dep 依赖管理器
@@ -21,14 +30,16 @@ export class Dep {
   /**
    * 收集依赖
    */
-  track() {
+  track(debugInfo?: DebuggerEventExtraInfo) {
     // 如果没有激活的 effect，或者禁止追踪，则不收集
-    if (!activeEffect) {
+    if (!activeEffect || !shouldTrack) {
       return
     }
 
     // 将当前 effect 添加到 dep.subs
     if (!this.subs.has(activeEffect)) {
+      debugInfo && console.log('[Dep track]', debugInfo)
+
       this.subs.add(activeEffect)
       // 同时反向记录 dep 到 effect 的依赖表
       if (!activeEffect.deps.includes(this)) {
@@ -40,12 +51,12 @@ export class Dep {
   /**
    * 触发依赖更新
    */
-  trigger() {
+  trigger(debugInfo?: DebuggerEventExtraInfo) {
     this.version++
-    this.notify()
+    this.notify(debugInfo)
   }
 
-  notify(): void {
+  notify(debugInfo?: DebuggerEventExtraInfo): void {
     startBatch()
     try {
       const effectsToRun = new Set<ReactiveEffect>()
@@ -59,6 +70,7 @@ export class Dep {
 
       // 逐个执行订阅者
       effectsToRun.forEach((effect) => {
+        debugInfo && console.log('[Dep trigger]', debugInfo)
         effect.notify()
       })
     } finally {

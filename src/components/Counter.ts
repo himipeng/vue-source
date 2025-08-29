@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'counter',
@@ -8,5 +8,15 @@ export default defineComponent({
       <button @click="increment"> + </button>
     </div>
   `,
-  props: ['count', 'increment'],
+  setup() {
+    const count = ref(0)
+    function increment() {
+      count.value++
+    }
+
+    return {
+      count,
+      increment,
+    }
+  },
 })

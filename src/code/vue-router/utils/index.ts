@@ -47,6 +47,6 @@ interface LocationPartial {
 export function stringifyURL(location: LocationPartial) {
   const { path, query, hash } = location
   // 将 query 对象转成 ?a=1&b=2 形式
-  const search = query ? '?' + new URLSearchParams(query).toString() : ''
+  const search = query && Object.keys(query).length ? '?' + new URLSearchParams(query).toString() : ''
   return path + search + (hash || '')
 }

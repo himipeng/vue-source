@@ -71,7 +71,8 @@ export class RouterMatcher implements RouterMatcherType {
   addRoute(record: RouteRecordRaw, parent?: RouteRecordMatcher): () => void {
     // 标准化路由对象，初始化 children 数组
     const children = record.children || []
-    const normalized: RouteRecordNormalized = { ...record, children }
+    const components = record.components || { default: record.component! }
+    const normalized: RouteRecordNormalized = { ...record, children, components }
 
     // 拼接父路径，如果不是绝对路径，则加上父路径
     if (parent && normalized.path[0] !== '/') {

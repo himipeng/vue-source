@@ -5,6 +5,7 @@ import R1 from '@/views/Router/R1'
 import R2 from '@/views/Router/R2'
 import R3 from '@/views/Router/R3'
 import R4 from '@/views/Router/R4'
+import Ref from '@/views/Ref'
 
 export const routes: RouteRecord[] = [
   {
@@ -32,6 +33,11 @@ export const routes: RouteRecord[] = [
         component: R2,
       },
     ],
+  },
+  {
+    path: '/ref',
+    name: 'ref',
+    component: Ref,
   },
 ]
 

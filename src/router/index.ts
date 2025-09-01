@@ -7,6 +7,7 @@ import R3 from '@/views/Router/R3'
 import R4 from '@/views/Router/R4'
 import Ref from '@/views/Ref'
 import Reactive from '@/views/Reactive'
+import Watch from '@/views/Watch'
 
 export const routes: RouteRecord[] = [
   {
@@ -44,6 +45,11 @@ export const routes: RouteRecord[] = [
     path: '/reactive',
     name: 'reactive',
     component: Reactive,
+  },
+  {
+    path: '/watch',
+    name: 'watch',
+    component: Watch,
   },
 ]
 

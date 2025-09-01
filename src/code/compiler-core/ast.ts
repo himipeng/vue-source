@@ -11,7 +11,7 @@ import {
   type TextNode,
   type VNodeCall,
 } from '@vue/types/compiler-core/ast'
-import { isString } from '../../utils'
+import { isString } from '../utils'
 
 /**
  * 创建简单表达式节点

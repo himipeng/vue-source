@@ -1,6 +1,6 @@
 import type { RootNode } from '@vue/types/compiler-core/ast'
 import { baseParse } from './parse'
-import { isString } from '@/utils'
+import { isString } from '@vue/utils'
 import { transform } from './transform'
 import { generate, type CodegenResult } from './codegen'
 

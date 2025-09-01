@@ -13,7 +13,7 @@ import {
 } from '@vue/types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
 import { CREATE_VNODE, helperNameMap, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
-import { isArray, isString, isSymbol } from '@/utils'
+import { isArray, isString, isSymbol } from '@vue/utils'
 
 /**
  * Codegen 阶段：将 transform 阶段生成的带 codegenNode 的 AST

@@ -1,4 +1,4 @@
-import { isObject } from '@/utils'
+import { isObject } from '@vue/utils'
 
 /**
  * 将任意值转换为字符串，用于插值显示

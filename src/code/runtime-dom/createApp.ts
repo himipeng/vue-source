@@ -3,7 +3,7 @@ import * as nodeOps from './nodeOps'
 import type { App, AppContext, ComponentOptions, Plugin } from '@vue/types/runtime-core'
 import { createVNode } from '@vue/runtime-core'
 import { patchProp } from './patchProp'
-import { isFunction } from '@/utils'
+import { isFunction } from '@vue/utils'
 import type { InjectionKey } from '@vue/types/reactivity'
 
 /** 渲染器 */

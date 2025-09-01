@@ -1,4 +1,4 @@
-import { isObject } from '@/utils'
+import { isObject } from '@vue/utils'
 
 // 用于缓存已访问的对象，避免循环引用导致的无限递归
 const seenObjects = new Set()

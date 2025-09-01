@@ -5,7 +5,7 @@ a {
   cursor: pointer;
 }
 a:hover {
-  color: #535bf2;
+  color: #4fc08d;
 }
 
 h1 {
@@ -18,27 +18,6 @@ h1 {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 button {
@@ -65,10 +44,15 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
-  }
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* router-link */
+.router-link-active {
+  color: rgb(255, 109, 109);
+}
+.router-link-exact-active {
+  color: red;
 }

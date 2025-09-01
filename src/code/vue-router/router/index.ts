@@ -11,7 +11,7 @@ import type {
 } from '../types'
 import { parseURL, stringifyURL } from '../utils'
 import { createRouterMatcher } from '../matcher'
-import { routerKey, routerViewLocationKey } from '../injectionSymbols'
+import { routeLocationKey, routerKey, routerViewLocationKey } from '../injectionSymbols'
 import { RouterLink, RouterView } from '../components'
 
 /**
@@ -223,6 +223,7 @@ export class Router implements RouterType {
   install(app: App) {
     // 注入全局值
     app.provide(routerKey, this)
+    app.provide(routeLocationKey, this.currentRoute)
     app.provide(routerViewLocationKey, this.currentRoute)
 
     // 注册 RouterView / RouterLink 组件

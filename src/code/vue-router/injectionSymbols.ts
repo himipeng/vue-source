@@ -1,7 +1,10 @@
 /** 用于提供 RouterView 的嵌套深度 */
 export const viewDepthKey = Symbol('viewDepth')
 
-/** 用于提供当前路由对象 */
+/** 当前路由对象 */
+export const routeLocationKey = Symbol('routeLocationKey')
+
+/** 当前 <RouterView> 的渲染上下文 */
 export const routerViewLocationKey = Symbol('routerViewLocation')
 
 /** 用于提供当前匹配的路由记录 */

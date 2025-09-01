@@ -1,14 +1,17 @@
 import { Dep } from '../dep'
 import { ReactiveEffect } from '../effect'
 
-export interface ComputedConfig<T> {
-  get: () => T
-  set?: (val: T) => void
+export type ComputedGetter<T> = (oldValue?: T) => T
+export type ComputedSetter<T> = (newValue: T) => void
+
+export interface ComputedOptions<T, S = T> {
+  get: ComputedGetter<T>
+  set?: ComputedSetter<S>
 }
 
 // TODO: 源码Vue 3.5+ 的 ComputedRefImpl 实际上本身是 Subscriber
 // 旧版 的 ComputedRefImpl 是一个特殊的 RefImpl
-export default class ComputedRefImpl<T = any> {
+export class ComputedRefImpl<T = any> {
   /**  value 值 */
   private _value: T
   /**  数据是否为脏数据（失效） */
@@ -19,13 +22,8 @@ export default class ComputedRefImpl<T = any> {
   private effect: ReactiveEffect
   /** ref标识 */
   public readonly __v_isRef = true
-  /**  setter */
-  private setter?: (val: T) => void
 
-  constructor(config: ComputedConfig<T>) {
-    const { get, set } = config
-    this.setter = set
-
+  constructor(public getter: ComputedGetter<T>, private readonly setter: ComputedSetter<T> | undefined) {
     this.effect = new ReactiveEffect(() => {
       // 当依赖改变时，触发
       if (!this._dirty) {
@@ -34,7 +32,7 @@ export default class ComputedRefImpl<T = any> {
         // TODO: 只标记，不触发，保持懒特性
         this.dep.trigger()
       }
-      return get()
+      return getter()
     })
     // 启动该副作用
     this._value = this.effect.run()

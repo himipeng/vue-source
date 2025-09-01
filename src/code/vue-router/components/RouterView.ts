@@ -18,16 +18,19 @@ export const RouterView = defineComponent<Props>({
     const injectedRoute = inject<Ref<RouteLocationNormalizedLoaded>>(routerViewLocationKey)!
 
     /** 当前要渲染的路由（优先用 props.route，否则用注入的路由） */
-    const routeToDisplay = computed({ get: () => props.route || injectedRoute.value })
+    const routeToDisplay = computed(() => props.route || injectedRoute.value)
 
     /** 注入父级的 depth（默认 0，表示最外层 RouterView） */
     const injectedDepth = inject(viewDepthKey, 0)!
 
     /** 当前 RouterView 的深度 */
-    const depth = computed({ get: () => unref(injectedDepth) })
+    const depth = computed(() => unref(injectedDepth))
 
     /** 向子 RouterView 提供深度（+1，保证嵌套时子级正确渲染） */
-    provide(viewDepthKey, computed({ get: () => depth.value + 1 }))
+    provide(
+      viewDepthKey,
+      computed(() => depth.value + 1)
+    )
 
     /** 向子 RouterView 提供当前路由 */
     provide(routerViewLocationKey, routeToDisplay)

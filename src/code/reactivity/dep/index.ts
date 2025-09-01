@@ -53,7 +53,7 @@ export class Dep {
    */
   trigger(debugInfo?: DebuggerEventExtraInfo) {
     this.version++
-    this.notify(debugInfo)
+    this.notify()
   }
 
   notify(debugInfo?: DebuggerEventExtraInfo): void {
@@ -78,3 +78,21 @@ export class Dep {
     }
   }
 }
+
+/**
+ * 一个特殊的唯一 Symbol，表示对象的「遍历依赖」。
+ *
+ * - 当在 effect 里写 `for...in` 或者 `Object.keys(obj)`，
+ *   Vue 就会对这个 ITERATE_KEY 建立依赖。
+ * - 这样一旦对象新增 / 删除属性（ADD / DELETE），就会触发这些依赖。
+ */
+export const ITERATE_KEY: unique symbol = Symbol('Object iterate')
+
+/**
+ * 一个特殊的唯一 Symbol，表示数组的「遍历依赖」。
+ *
+ * - 当在 effect 里写 `for...of` 或者 `arr.forEach`，
+ *   Vue 就会对这个 ARRAY_ITERATE_KEY 建立依赖。
+ * - 这样一旦数组新增 / 删除索引，就会触发这些依赖。
+ */
+export const ARRAY_ITERATE_KEY: unique symbol = Symbol('Array iterate')

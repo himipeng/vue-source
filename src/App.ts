@@ -7,6 +7,8 @@ const template = `
       |
       <router-link to="/router"></router-link>
       |
+      <router-link to="/component"></router-link>
+      |
       <router-link to="/ref"></router-link>
       |
       <router-link to="/computed"></router-link>

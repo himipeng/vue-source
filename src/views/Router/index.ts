@@ -13,7 +13,7 @@ const template = `
 `
 
 export default defineComponent({
-  name: 'router',
+  name: 'Router',
   template,
   setup() {
     return {}

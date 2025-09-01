@@ -3,7 +3,7 @@ import Child from './Child'
 
 const template = `
   <div>
-    <h1>provide</h1>
+    <h1>Provide</h1>
     <div>
       <span>count: {{ count }}</span>
       <button @click="increment"> + </button>
@@ -13,7 +13,7 @@ const template = `
 `
 
 export default defineComponent({
-  name: 'provide',
+  name: 'Provide',
   template,
   components: {
     Child,

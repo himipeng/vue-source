@@ -7,6 +7,6 @@ const template = `
 `
 
 export default defineComponent({
-  name: 'r2',
+  name: 'R2',
   template,
 })

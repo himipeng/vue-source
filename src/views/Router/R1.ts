@@ -8,6 +8,6 @@ const template = `
 `
 
 export default defineComponent({
-  name: 'r1',
+  name: 'R1',
   template,
 })

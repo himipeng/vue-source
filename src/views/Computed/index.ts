@@ -2,7 +2,7 @@ import { computed, defineComponent, ref } from 'vue'
 
 const template = `
   <div>
-    <h1>computed</h1>
+    <h1>Computed</h1>
     <div>
       <span>count: {{ count }}</span>
       <button @click="increment"> + </button>
@@ -15,7 +15,7 @@ const template = `
 `
 
 export default defineComponent({
-  name: 'computed',
+  name: 'Computed',
   template,
   setup() {
     const count = ref(0)

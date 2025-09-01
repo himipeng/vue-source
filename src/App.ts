@@ -14,6 +14,8 @@ const template = `
       <router-link to="/reactive"></router-link>
       |
       <router-link to="/watch"></router-link>
+      |
+      <router-link to="/provide"></router-link>
     </div>
     <router-view></router-view>
   </div>

@@ -1,5 +1,12 @@
-import { defineComponent, provide, ref } from 'vue'
+import { defineComponent, provide, Ref, ref } from 'vue'
 import Child from './Child'
+
+export const InjectKeyCounter = Symbol('counter')
+
+export interface ProvideCounter {
+  count: Ref<number>
+  increment: () => void
+}
 
 const template = `
   <div>
@@ -8,6 +15,7 @@ const template = `
       <span>count: {{ count }}</span>
       <button @click="increment"> + </button>
     </div>
+    <hr></hr>
     <Child></Child>
   </div>
 `
@@ -25,14 +33,14 @@ export default defineComponent({
       count.value++
     }
 
-    provide('test-1', {
+    provide<ProvideCounter>(InjectKeyCounter, {
       count,
       increment,
     })
 
     return {
       count,
-      increment
+      increment,
     }
   },
 })

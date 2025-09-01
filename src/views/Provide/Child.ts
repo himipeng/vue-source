@@ -1,34 +1,32 @@
 import { defineComponent, inject } from 'vue'
-
-interface IProvides {
-  count: number
-  increment: () => void
-}
+import { InjectKeyCounter, type ProvideCounter } from '.'
 
 const template = `
   <div>
-    <p>child</p>
+    <p>Child</p>
     <div>
       <span>count: {{ count }}</span>
       <button @click="increment"> + </button>
     </div>
     <div>
-      <span>count2: {{ count2 }}</span>
+      <span>version: {{ version }}</span>
     </div>
   </div>
 `
 
 export default defineComponent({
-  name: 'provide/child',
+  name: 'Provide/Child',
   template,
   setup() {
-    const provides = inject<IProvides>('test-1')
-    const appProvides = inject('test-2')
+    // 来自 父组件
+    const provides = inject<ProvideCounter>(InjectKeyCounter)
+    // 来自 app
+    const appProvides = inject('globalState')
 
     return {
       count: provides?.count || 0,
       increment: provides?.increment || (() => {}),
-      count2: appProvides?.count2 || 0,
+      version: appProvides?.version || '',
     }
   },
 })

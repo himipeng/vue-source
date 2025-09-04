@@ -29,5 +29,8 @@
     "noUncheckedSideEffectImports": true,
     "noImplicitAny": false
   },
-  "include": ["src"]
+  "include": ["src"],
+  "vueCompilerOptions": {
+    "globalTypesPath": "./src/types/vue-global.d.ts"
+  }
 }

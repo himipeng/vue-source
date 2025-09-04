@@ -10,10 +10,10 @@ import {
   type JSChildNode,
   type CallExpression,
   type CodegenNode,
-} from '@vue/types/compiler-core/ast'
+} from '../../types/compiler-core/ast'
 import type { CodegenOptions } from '../ast'
-import { CREATE_VNODE, helperNameMap, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '@vue/runtime-core'
-import { isArray, isString, isSymbol } from '@vue/utils'
+import { CREATE_VNODE, helperNameMap, RESOLVE_COMPONENT, TO_DISPLAY_STRING } from '../../runtime-core'
+import { isArray, isString, isSymbol } from '../../utils'
 
 /**
  * Codegen 阶段：将 transform 阶段生成的带 codegenNode 的 AST
@@ -152,9 +152,11 @@ function genModulePreamble(ast: RootNode, ctx: CodegenContext) {
   const helpers = Array.from(ast.helpers)
 
   // 生成 import 语句
-  push(`import { ${helpers.join(', ')} } from ${JSON.stringify(runtimeModuleName)}\n`)
-  // 生成 const _xxx = xxx
-  push(`const ${helpers.map((name) => `_${helperNameMap[name]} = ${helperNameMap[name]}`).join(', ')}\n`)
+  if (helpers.length) {
+    // 在 import 阶段就加别名 import { xx as _xx } from 'vue'
+    const importStatements = helpers.map((h) => `${helperNameMap[h]} as _${helperNameMap[h]}`).join(', ')
+    push(`import { ${importStatements} } from ${JSON.stringify(runtimeModuleName)}\n`)
+  }
 
   newline()
   push(`export `)

@@ -1,6 +1,6 @@
-import type { RootNode } from '@vue/types/compiler-core/ast'
+import type { CompilerOptions, RootNode } from '../types/compiler-core/ast'
 import { baseParse } from './parse'
-import { isString } from '@vue/utils'
+import { isString } from '../utils'
 import { transform } from './transform'
 import { generate, type CodegenResult } from './codegen'
 
@@ -15,7 +15,7 @@ import { generate, type CodegenResult } from './codegen'
  * 2. 对 AST 进行转换，执行各种编译阶段的转换操作。
  * 3. 根据转换后的 AST 生成最终的代码字符串。
  */
-export function baseCompile(source: string | RootNode): CodegenResult {
+export function baseCompile(source: string | RootNode, options: CompilerOptions = {}): CodegenResult {
   // 判断传入的 source 是否为字符串，如果是，则解析成 AST，否则直接使用传入的 AST
   const ast = isString(source) ? baseParse(source) : source
 
@@ -23,7 +23,7 @@ export function baseCompile(source: string | RootNode): CodegenResult {
   transform(ast)
 
   // 根据转换后的 AST 生成渲染函数代码
-  const res = generate(ast)
+  const res = generate(ast, options)
 
   return res
 }

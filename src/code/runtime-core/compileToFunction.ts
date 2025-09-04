@@ -1,11 +1,11 @@
 import type { CompilerOptions } from '@vue/types/compiler-core/ast'
 import type { RenderFunction } from '@vue/types/runtime-core'
 import { isString } from '@vue/utils'
-import { baseCompile } from '@vue/compiler-core'
+import { compile } from '@vue/compiler-dom'
 import * as runtimeDom from '@vue/runtime-dom'
 
 /**
- * 将模板字符串或 HTMLElement 编译为渲染函数
+ * 将模板字符串或 HTMLElement 编译为渲染函数（运行时编译模式）
  *
  * @param {string | HTMLElement} template - 模板字符串或者包含模板的 HTMLElement
  * @param {CompilerOptions} [options] - 编译选项
@@ -29,7 +29,7 @@ export function compileToFunction(template: string | HTMLElement, options?: Comp
   }
 
   // 调用 baseCompile 编译模板字符串，生成渲染函数代码。
-  const { code } = baseCompile(template)
+  const { code } = compile(template, { mode: 'function' })
 
   // 使用 new Function 动态执行编译代码，生成渲染函数。
   // Vue 为形参，runtimeDom 为实参，code 为函数体

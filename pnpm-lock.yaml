@@ -18,6 +18,86 @@ importers:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@24.2.1)
 
+  packages/compiler-core:
+    devDependencies:
+      '@vue/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/compiler-dom:
+    dependencies:
+      '@vue/compiler-core':
+        specifier: workspace:*
+        version: link:../compiler-core
+
+  packages/compiler-sfc:
+    dependencies:
+      '@vue/compiler-core':
+        specifier: workspace:*
+        version: link:../compiler-core
+      '@vue/compiler-dom':
+        specifier: workspace:*
+        version: link:../compiler-dom
+
+  packages/reactivity:
+    dependencies:
+      '@vue/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/runtime-core:
+    dependencies:
+      '@vue/compiler-core':
+        specifier: workspace:*
+        version: link:../compiler-core
+      '@vue/reactivity':
+        specifier: workspace:*
+        version: link:../reactivity
+      '@vue/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/runtime-dom:
+    dependencies:
+      '@vue/reactivity':
+        specifier: workspace:*
+        version: link:../reactivity
+      '@vue/runtime-core':
+        specifier: workspace:*
+        version: link:../runtime-core
+      '@vue/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/shared: {}
+
+  packages/vue:
+    dependencies:
+      '@vue/compiler-core':
+        specifier: workspace:*
+        version: link:../compiler-core
+      '@vue/compiler-dom':
+        specifier: workspace:*
+        version: link:../compiler-dom
+      '@vue/reactivity':
+        specifier: workspace:*
+        version: link:../reactivity
+      '@vue/runtime-core':
+        specifier: workspace:*
+        version: link:../runtime-core
+      '@vue/runtime-dom':
+        specifier: workspace:*
+        version: link:../runtime-dom
+      '@vue/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/vue-router:
+    dependencies:
+      vue:
+        specifier: workspace:*
+        version: link:../vue
+
 packages:
 
   '@esbuild/aix-ppc64@0.25.4':

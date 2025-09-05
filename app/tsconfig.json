@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "vue": ["../packages/vue/src"],
+      "vue-router": ["../packages/vue-router/src"],
+      "@vue/*": ["../packages/*/src"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

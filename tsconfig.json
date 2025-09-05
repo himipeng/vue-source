@@ -5,32 +5,32 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "paths": {
-      "vue": ["src/code"],
-      "vue-router": ["src/code/vue-router"],
-      "@vue/*": ["src/code/*"],
-      "@/*": ["src/*"]
-    },
-    "baseUrl": ".",
 
-    /* Bundler mode */
+    "baseUrl": ".",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    // "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
+    // "noEmit": true,
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
     "noImplicitAny": false
   },
-  "include": ["src"],
-  "vueCompilerOptions": {
-    "globalTypesPath": "./src/types/vue-global.d.ts"
-  }
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/reactivity" },
+    { "path": "./packages/runtime-core" },
+    { "path": "./packages/runtime-dom" },
+    { "path": "./packages/compiler-core" },
+    { "path": "./packages/compiler-dom" },
+    { "path": "./packages/compiler-sfc" },
+    { "path": "./packages/vue" },
+    { "path": "./packages/vue-router" }
+  ]
 }

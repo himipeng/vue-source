@@ -11,6 +11,7 @@ import Watch from '@/views/Watch'
 import Computed from '@/views/Computed'
 import Provide from '@/views/Provide'
 import Component from '@/views/Component'
+import SFC from '@/views/SFC/index.vue'
 
 export const routes: RouteRecord[] = [
   {
@@ -68,6 +69,11 @@ export const routes: RouteRecord[] = [
     path: '/provide',
     name: 'provide',
     component: Provide,
+  },
+  {
+    path: '/sfc',
+    name: 'sfc',
+    component: SFC,
   },
 ]
 

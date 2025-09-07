@@ -1,15 +1,19 @@
 // @ts-nocheck
 export {};
 
+; declare module 'vue' {
+	export interface GlobalComponents { }
+	export interface GlobalDirectives { }
+}
 ; declare global {
 	const __VLS_directiveBindingRestFields: { instance: null, oldValue: null, modifiers: any, dir: any };
 	const __VLS_unref: typeof import('vue').unref;
 	const __VLS_placeholder: any;
 
 	type __VLS_NativeElements = __VLS_SpreadMerge<SVGElementTagNameMap, HTMLElementTagNameMap>;
-	type __VLS_IntrinsicElements = import('vue/jsx-runtime').JSX.IntrinsicElements;
-	type __VLS_Element = import('vue/jsx-runtime').JSX.Element;
-	type __VLS_GlobalComponents = import('vue').GlobalComponents;
+	type __VLS_IntrinsicElements = globalThis.JSX.IntrinsicElements;
+	type __VLS_Element = globalThis.JSX.Element;
+	type __VLS_GlobalComponents = import('vue').GlobalComponents & Pick<typeof import('vue'), 'Transition' | 'TransitionGroup' | 'KeepAlive' | 'Suspense' | 'Teleport'>;
 	type __VLS_GlobalDirectives = import('vue').GlobalDirectives;
 	type __VLS_IsAny<T> = 0 extends 1 & T ? true : false;
 	type __VLS_PickNotAny<A, B> = __VLS_IsAny<A> extends true ? B : A;
@@ -34,7 +38,7 @@ export {};
 	type __VLS_FunctionalComponent<T> = (props: (T extends { $props: infer Props } ? Props : {}) & Record<string, unknown>, ctx?: any) => __VLS_Element & {
 		__ctx?: {
 			attrs?: any;
-			slots?: T extends { $slots: infer Slots } ? Slots : Record<string, any>;
+			slots?: T extends { $scopedSlots: infer Slots } ? Slots : Record<string, any>;
 			emit?: T extends { $emit: infer Emit } ? Emit : {};
 			props?: (T extends { $props: infer Props } ? Props : {}) & Record<string, unknown>;
 			expose?: (exposed: T) => void;
@@ -86,7 +90,7 @@ export {};
 	type __VLS_ResolveEmits<
 		Comp,
 		Emits,
-		TypeEmits = Comp extends { __typeEmits?: infer T } ? unknown extends T ? {} : import('vue').ShortEmitsToObject<T> : {},
+		TypeEmits = {},
 		NormalizedEmits = __VLS_NormalizeEmits<Emits> extends infer E ? string extends keyof E ? {} : E : never,
 	> = __VLS_SpreadMerge<NormalizedEmits, TypeEmits>;
 	type __VLS_ResolveDirectives<T> = {

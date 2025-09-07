@@ -4,6 +4,12 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    vite:
+      specifier: ^6.3.5
+      version: 6.3.5
+
 importers:
 
   .:
@@ -15,8 +21,21 @@ importers:
         specifier: ~5.8.3
         version: 5.8.3
       vite:
-        specifier: ^6.3.5
+        specifier: 'catalog:'
         version: 6.3.5(@types/node@24.2.1)
+
+  app:
+    dependencies:
+      vue:
+        specifier: workspace:*
+        version: link:../packages/vue
+      vue-router:
+        specifier: workspace:*
+        version: link:../packages/vue-router
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: workspace:*
+        version: link:../packages/vite-plugin-vue
 
   packages/compiler-core:
     devDependencies:
@@ -70,6 +89,18 @@ importers:
         version: link:../shared
 
   packages/shared: {}
+
+  packages/vite-plugin-vue:
+    dependencies:
+      '@vue/compiler-sfc':
+        specifier: workspace:*
+        version: link:../compiler-sfc
+      vite:
+        specifier: 'catalog:'
+        version: 6.3.5(@types/node@24.2.1)
+      vue:
+        specifier: workspace:*
+        version: link:../vue
 
   packages/vue:
     dependencies:

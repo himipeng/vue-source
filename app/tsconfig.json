@@ -9,5 +9,10 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+
+  "vueCompilerOptions": {
+    // 用于 Volar .vue 文件类型推导
+    "globalTypesPath": "./src/types/vue-global.d.ts" // 自动生成
+  }
 }

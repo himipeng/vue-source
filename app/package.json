@@ -7,8 +7,11 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "devDependencies": {
+  "dependencies": {
     "vue": "workspace:*",
     "vue-router": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "workspace:*"
   }
 }

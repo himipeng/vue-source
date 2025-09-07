@@ -1,2 +1,13 @@
+# pnpm-workspace.yaml 用来声明整个 monorepo 的工作空间范围
+
 packages:
-  - 'packages/*'
+  # 指定哪些目录下的 package 会被 pnpm 纳入 workspace
+  # 这里包含：
+  - 'app' # playground 应用
+  - 'packages/*' # 所有子包，比如 compiler-core、runtime-core、vue 等
+
+catalog:
+  # catalog 是 pnpm 8 引入的功能，可以统一依赖版本
+  # 所有 workspace 内用到的 vite 都会自动锁定为 ^6.3.5
+  # eg. package.json - "vite": "catalog:",
+  'vite': ^6.3.5

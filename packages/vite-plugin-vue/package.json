@@ -1,0 +1,29 @@
+{
+  "name": "@vitejs/plugin-vue",
+  "version": "0.0.1",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.es.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@vue/compiler-sfc": "workspace:*"
+  },
+  "peerDependencies": {
+    "vite": "catalog:",
+    "vue": "workspace:*"
+  }
+}

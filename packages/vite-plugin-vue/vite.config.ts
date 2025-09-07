@@ -7,6 +7,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'VitePluginVue', // UMD 名字
       fileName: (format) => `index.${format}.js`,
+      formats: ['es', 'cjs', 'umd'],
     },
     rollupOptions: {
       external: ['vue', 'vite'], // 不要打包进来

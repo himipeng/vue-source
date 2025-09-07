@@ -452,7 +452,7 @@ export type JSChildNode = VNodeCall | CallExpression | ObjectExpression | Expres
  * 编译器选项类型，暂时定义为任意类型。
  */
 // TODO: export type CompilerOptions = ParserOptions & TransformOptions & CodegenOptions
-export type CompilerOptions = { mode?: 'function' | 'module' }
+export type CompilerOptions = { mode?: 'function' | 'module'; runtimeModuleName?: string } & Record<string, any>
 
 /**
  * 代码生成节点类型，描述如何生成渲染函数代码。

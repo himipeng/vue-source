@@ -1,5 +1,5 @@
 // TODO: 简化版
-import { compile } from '../../compiler-dom/src'
+import { compile } from '@vue/compiler-dom'
 
 export function parse(source: string) {
   const templateMatch = source.match(/<template>([\s\S]*?)<\/template>/)
@@ -14,8 +14,10 @@ export function parse(source: string) {
 }
 
 export function compileTemplate({ source }: { source: string }) {
-  // 关键：SFC 里用 module 模式
-  return compile(source, { mode: 'module' })
+  return compile(source, {
+    mode: 'module',
+    runtimeModuleName: 'vue',
+  })
 }
 
 export function compileSFC(sfcSource: string, filename: string = 'anonymous.vue') {

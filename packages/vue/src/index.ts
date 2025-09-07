@@ -11,6 +11,8 @@ export * from '@vue/reactivity'
 
 export * from '@vue/runtime-core'
 
+export { toDisplayString } from '@vue/runtime-dom'
+
 // 暴露部分编译器 API（仅完整构建版本才有）
 export { compile } from '@vue/compiler-dom'
 

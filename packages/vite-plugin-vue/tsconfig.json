@@ -1,20 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    /* ---- 基础设置 ---- */
-    "composite": true, // 方便增量编译 (tsc -b)
-    "rootDir": "src",
     "outDir": "dist",
-
-    /* ---- 声明文件相关 ---- */
-    "declaration": true, // 生成 .d.ts
-    "declarationMap": true, // 生成 .d.ts.map (可选)
-    "emitDeclarationOnly": true, // 只生成声明，不输出 js，js 由 vite 处理
-
-    /* ---- 覆盖掉根配置 ---- */
-    "moduleResolution": "node", // 用 node 风格解析，保证 d.ts 正常
-    "verbatimModuleSyntax": false // 允许 tsc 处理 import/export，避免漏生成 d.ts
+    "rootDir": "src",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
   },
   "include": ["src"],
+  "exclude": ["dist"],
   "references": [{ "path": "../compiler-sfc" }]
 }

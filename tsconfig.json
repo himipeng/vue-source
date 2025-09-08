@@ -1,25 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-
-    "baseUrl": ".",
-    "moduleResolution": "bundler",
-    // "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    // "noEmit": true,
-
-    /* Linting */
-    "strict": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false
-  },
   "files": [],
   "include": [],
   "references": [
@@ -31,6 +10,7 @@
     { "path": "./packages/compiler-dom" },
     { "path": "./packages/compiler-sfc" },
     { "path": "./packages/vue" },
-    { "path": "./packages/vue-router" }
+    { "path": "./packages/vue-router" },
+    { "path": "./packages/vite-plugin-vue" }
   ]
 }

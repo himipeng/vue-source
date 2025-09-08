@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm -C app dev",
-    "build": "pnpm -F @vitejs/plugin-vue build"
+    "clean": "pnpm -r --filter \"./packages/*\" run clean",
+    "build": "pnpm -r --filter \"./packages/*\" run build"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.4",
     "@types/node": "^24.2.1",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.50.1",
+    "tslib": "^2.8.1",
     "typescript": "~5.8.3",
     "vite": "catalog:"
   }

@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    // 把 TS 编译后的目标语法设为 ESNext（保留最新的 JS 特性）
+    "target": "ESNext",
+    // 输出的模块标准设为 ESNext（比如 import/export，不转成 CommonJS）
+    "module": "ESNext",
+    // 模块解析方式：Node 风格（遇到 import 时，像 Node 一样从 node_modules 或路径查找）
+    "moduleResolution": "Node",
+    // 编译输出目录（所有编译结果放在 dist 目录下）
+    "outDir": "dist",
+    // 开启工程引用 (Project References) 模式，允许被其他 tsconfig 引用
+    /* 
+      "composite": true 会开启增量编译（用 tsconfig.tsbuildinfo 判断是否需要重新 emit）。
+      如果清了 dist/ 但没删 .tsbuildinfo，TS 可能判定“已最新”，从而不再输出 .d.ts。
+      解决： 设置 "tsBuildInfoFile": "./dist/.tsbuildinfo",随 dist 一起删掉。
+    */
+    "composite": true,
+    // 开启严格模式（更严格的类型检查：null、未定义等问题能提前发现）
+    "strict": true,
+    // 允许从 CommonJS 模块导入（比如 import fs from "fs"）
+    "esModuleInterop": true,
+    // 强制文件名大小写一致（避免 Mac/Windows/Linux 大小写差异导致的 bug）
+    "forceConsistentCasingInFileNames": true,
+    // 跳过第三方库的类型检查（提升编译速度，避免 node_modules 报一堆错）
+    "skipLibCheck": true,
+    // 生成 .d.ts 类型声明文件，方便别的包使用
+    "declaration": true,
+    // 给类型声明文件生成 source map，方便调试类型来源
+    "declarationMap": true,
+    // 只生成声明文件（不输出编译后的 js 文件，交给 rollup 处理）
+    "emitDeclarationOnly": true
+  }
+}

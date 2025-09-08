@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
-import vue from '@vitejs/plugin-vue'
+import vue from '@pure-vue/vite-plugin'
 
 export default defineConfig({
   resolve: {
@@ -24,7 +24,7 @@ export default defineConfig({
       '@pure-vue/runtime-dom': fileURLToPath(new URL('../packages/runtime-dom/src', import.meta.url)),
 
       // 以下两个包应用于 vite.config(node 环境)，无法 alias 解析
-      // 'vite-plugin-vue': fileURLToPath(new URL('../packages/vite-plugin-vue/src', import.meta.url)),
+      // '@pure-vue/vite-plugin': fileURLToPath(new URL('../packages/vite-plugin-vue/src', import.meta.url)),
       // '@pure-vue/compiler-sfc': fileURLToPath(new URL('../packages/compiler-sfc/src', import.meta.url)),
     },
   },

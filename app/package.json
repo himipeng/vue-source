@@ -13,6 +13,6 @@
     "pvue-router": "workspace:*"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "workspace:*"
+    "@pure-vue/vite-plugin": "workspace:*"
   }
 }

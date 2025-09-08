@@ -1,4 +1,4 @@
-import { computed, defineComponent, h, inject } from 'vue'
+import { computed, defineComponent, h, inject } from 'pvue'
 import type { Router } from '../router'
 import { routeLocationKey, routerKey } from '../injectionSymbols'
 import type { RouteLocationRaw } from '../types'

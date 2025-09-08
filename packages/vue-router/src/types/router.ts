@@ -1,4 +1,4 @@
-import type { App, Ref } from 'vue'
+import type { App, Ref } from 'pvue'
 import type { RouteRecord } from './route'
 import type { RouteLocationNormalizedLoaded, RouteLocationRaw, RouteLocationResolved } from './location'
 import type { RouterHistory } from './history'

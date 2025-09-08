@@ -1,7 +1,6 @@
-import { createAppContext, createRenderer } from '@vue/runtime-core'
+import { createAppContext, createRenderer, createVNode } from '@vue/runtime-core'
 import type { App, ComponentOptions, Plugin } from '@vue/runtime-core'
 import * as nodeOps from './nodeOps'
-import { createVNode } from '@vue/runtime-core'
 import { patchProp } from './patchProp'
 import { isFunction } from '@vue/shared'
 import type { InjectionKey } from '@vue/reactivity'

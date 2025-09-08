@@ -1,4 +1,4 @@
-// TODO: 简化版
+// TODO: 待优化
 import { compile } from '@vue/compiler-dom'
 
 export function parse(source: string) {

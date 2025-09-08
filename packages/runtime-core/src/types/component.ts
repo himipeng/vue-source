@@ -1,7 +1,7 @@
-import type { ReactiveEffect } from '@pure-vue/reactivity'
+import type { ReactiveEffect } from '@purevue/reactivity'
 import type { AppContext, RenderFunction, VNode } from '.'
 import type { ComponentOptions } from './componentOptions'
-import type { Provides } from '@pure-vue/reactivity'
+import type { Provides } from '@purevue/reactivity'
 
 export type Data = Record<string, unknown>
 export type LifecycleHook<TFn = Function> = TFn /* & SchedulerJob */[] | null

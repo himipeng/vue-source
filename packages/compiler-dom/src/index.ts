@@ -1,2 +1,2 @@
-export * from '@pure-vue/compiler-core'
+export * from '@purevue/compiler-core'
 export * from './compile'

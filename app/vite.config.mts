@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
-import vue from '@pure-vue/vite-plugin'
+import vue from '@purevue/vite-plugin'
 
 export default defineConfig({
   resolve: {
@@ -16,16 +16,16 @@ export default defineConfig({
       'pvue-router': fileURLToPath(new URL('../packages/vue-router/src', import.meta.url)),
 
       // 子包
-      '@pure-vue/shared': fileURLToPath(new URL('../packages/shared/src', import.meta.url)),
-      '@pure-vue/reactivity': fileURLToPath(new URL('../packages/reactivity/src', import.meta.url)),
-      '@pure-vue/runtime-core': fileURLToPath(new URL('../packages/runtime-core/src', import.meta.url)),
-      '@pure-vue/compiler-core': fileURLToPath(new URL('../packages/compiler-core/src', import.meta.url)),
-      '@pure-vue/compiler-dom': fileURLToPath(new URL('../packages/compiler-dom/src', import.meta.url)),
-      '@pure-vue/runtime-dom': fileURLToPath(new URL('../packages/runtime-dom/src', import.meta.url)),
+      '@purevue/shared': fileURLToPath(new URL('../packages/shared/src', import.meta.url)),
+      '@purevue/reactivity': fileURLToPath(new URL('../packages/reactivity/src', import.meta.url)),
+      '@purevue/runtime-core': fileURLToPath(new URL('../packages/runtime-core/src', import.meta.url)),
+      '@purevue/compiler-core': fileURLToPath(new URL('../packages/compiler-core/src', import.meta.url)),
+      '@purevue/compiler-dom': fileURLToPath(new URL('../packages/compiler-dom/src', import.meta.url)),
+      '@purevue/runtime-dom': fileURLToPath(new URL('../packages/runtime-dom/src', import.meta.url)),
 
       // 以下两个包应用于 vite.config(node 环境)，无法 alias 解析
-      // '@pure-vue/vite-plugin': fileURLToPath(new URL('../packages/vite-plugin-vue/src', import.meta.url)),
-      // '@pure-vue/compiler-sfc': fileURLToPath(new URL('../packages/compiler-sfc/src', import.meta.url)),
+      // '@purevue/vite-plugin': fileURLToPath(new URL('../packages/vite-plugin-vue/src', import.meta.url)),
+      // '@purevue/compiler-sfc': fileURLToPath(new URL('../packages/compiler-sfc/src', import.meta.url)),
     },
   },
   plugins: [vue()],

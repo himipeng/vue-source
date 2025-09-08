@@ -1,4 +1,4 @@
-import { hasOwn, isArray, isIntegerKey, isSymbol } from '@pure-vue/shared'
+import { hasOwn, isArray, isIntegerKey, isSymbol } from '@purevue/shared'
 import { reactive } from '.'
 import { hasChanged, isObject, isRef, toRaw } from '../utils'
 import { ReactiveFlags } from './ReactiveFlags'

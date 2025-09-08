@@ -1,6 +1,6 @@
 import type { CompilerOptions, RootNode } from './types'
 import { baseParse } from './parse'
-import { isString } from '@pure-vue/shared'
+import { isString } from '@purevue/shared'
 import { transform } from './transform'
 import { generate, type CodegenResult } from './codegen'
 

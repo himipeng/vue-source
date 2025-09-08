@@ -1,9 +1,9 @@
-import { createAppContext, createRenderer, createVNode } from '@pure-vue/runtime-core'
-import type { App, ComponentOptions, Plugin } from '@pure-vue/runtime-core'
+import { createAppContext, createRenderer, createVNode } from '@purevue/runtime-core'
+import type { App, ComponentOptions, Plugin } from '@purevue/runtime-core'
 import * as nodeOps from './nodeOps'
 import { patchProp } from './patchProp'
-import { isFunction } from '@pure-vue/shared'
-import type { InjectionKey } from '@pure-vue/reactivity'
+import { isFunction } from '@purevue/shared'
+import type { InjectionKey } from '@purevue/reactivity'
 
 /** 渲染器 */
 const renderer = createRenderer({ ...nodeOps, patchProp })

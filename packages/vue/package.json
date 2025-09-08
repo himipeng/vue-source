@@ -18,11 +18,11 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@pure-vue/compiler-core": "workspace:*",
-    "@pure-vue/compiler-dom": "workspace:*",
-    "@pure-vue/runtime-core": "workspace:*",
-    "@pure-vue/runtime-dom": "workspace:*",
-    "@pure-vue/reactivity": "workspace:*",
-    "@pure-vue/shared": "workspace:*"
+    "@purevue/compiler-core": "workspace:*",
+    "@purevue/compiler-dom": "workspace:*",
+    "@purevue/runtime-core": "workspace:*",
+    "@purevue/runtime-dom": "workspace:*",
+    "@purevue/reactivity": "workspace:*",
+    "@purevue/shared": "workspace:*"
   }
 }

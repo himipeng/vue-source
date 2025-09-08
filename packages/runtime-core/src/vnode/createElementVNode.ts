@@ -1,5 +1,5 @@
 import type { VNode } from '../types'
-import { ShapeFlags } from '@pure-vue/shared'
+import { ShapeFlags } from '@purevue/shared'
 import { createVNode } from '../vnode/createVNode'
 
 /**

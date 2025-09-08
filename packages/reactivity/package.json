@@ -1,5 +1,5 @@
 {
-  "name": "@pure-vue/reactivity",
+  "name": "@purevue/reactivity",
   "version": "0.0.1",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -18,6 +18,6 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@pure-vue/shared": "workspace:*"
+    "@purevue/shared": "workspace:*"
   }
 }

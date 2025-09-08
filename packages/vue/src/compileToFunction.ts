@@ -1,8 +1,8 @@
-import type { CompilerOptions } from '@pure-vue/compiler-core'
-import { isString } from '@pure-vue/shared'
-import { compile } from '@pure-vue/compiler-dom'
-import * as runtimeDom from '@pure-vue/runtime-dom'
-import { registerRuntimeCompiler, type RenderFunction } from '@pure-vue/runtime-dom'
+import type { CompilerOptions } from '@purevue/compiler-core'
+import { isString } from '@purevue/shared'
+import { compile } from '@purevue/compiler-dom'
+import * as runtimeDom from '@purevue/runtime-dom'
+import { registerRuntimeCompiler, type RenderFunction } from '@purevue/runtime-dom'
 
 /**
  * 将模板字符串或 HTMLElement 编译为渲染函数（运行时编译模式）

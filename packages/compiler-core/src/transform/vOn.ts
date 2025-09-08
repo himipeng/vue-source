@@ -8,7 +8,7 @@ import {
   NodeTypes,
 } from '../types'
 import { createCompoundExpression, createObjectProperty, createSimpleExpression } from '../ast'
-import { camelize, capitalize } from '@pure-vue/shared'
+import { camelize, capitalize } from '@purevue/shared'
 
 /**
  * 简化版 transformOn，处理 v-on 指令转换为普通属性

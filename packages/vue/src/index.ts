@@ -4,16 +4,16 @@
  */
 
 // 默认导出 runtime-dom 的所有 API
-// export * from '@pure-vue/runtime-dom'
+// export * from '@purevue/runtime-dom'
 
 // 补充 reactivity 的 API
-export * from '@pure-vue/reactivity'
+export * from '@purevue/reactivity'
 
-export * from '@pure-vue/runtime-core'
+export * from '@purevue/runtime-core'
 
-export { toDisplayString } from '@pure-vue/runtime-dom'
+export { toDisplayString } from '@purevue/runtime-dom'
 
 // 暴露部分编译器 API（仅完整构建版本才有）
-export { compile } from '@pure-vue/compiler-dom'
+export { compile } from '@purevue/compiler-dom'
 
 export * from './createApp'

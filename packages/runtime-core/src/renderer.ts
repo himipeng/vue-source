@@ -1,5 +1,5 @@
 import type { ComponentInternalInstance, RendererNode, VNode, VNodeArrayChildren, VNodeChild } from './types'
-import { createVNode, Text, Comment } from '..'
+import { createVNode, Text, Comment } from './vnode'
 import { ShapeFlags } from '@vue/shared'
 import { createComponentInstance, setupComponent } from './component'
 import { ReactiveEffect } from '@vue/reactivity'

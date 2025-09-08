@@ -1,2 +1,2 @@
 export * from './html5'
-export * from './hash'
+// export * from './hash'

@@ -38,10 +38,10 @@ importers:
 
   app:
     dependencies:
-      vue:
+      pvue:
         specifier: workspace:*
         version: link:../packages/vue
-      vue-router:
+      pvue-router:
         specifier: workspace:*
         version: link:../packages/vue-router
     devDependencies:
@@ -134,7 +134,7 @@ importers:
 
   packages/vue-router:
     dependencies:
-      vue:
+      pvue:
         specifier: workspace:*
         version: link:../vue
 

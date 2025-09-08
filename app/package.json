@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "workspace:*",
-    "vue-router": "workspace:*"
+    "pvue": "workspace:*",
+    "pvue-router": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "workspace:*"

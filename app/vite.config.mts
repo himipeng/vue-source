@@ -6,11 +6,16 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'vue-router': fileURLToPath(new URL('../packages/vue-router/src', import.meta.url)),
       // 可以加 alias，把子包直接指向源码，
       // 这样开发时， Vite 会直接用源码编译，不用每次改代码都要先跑 build
       // 否者走子包 package.json 的 main/module 指向的 dist 目录
       vue: fileURLToPath(new URL('../packages/vue/src', import.meta.url)),
+      pvue: fileURLToPath(new URL('../packages/vue/src', import.meta.url)),
+
+      'vue-router': fileURLToPath(new URL('../packages/vue-router/src', import.meta.url)),
+      'pvue-router': fileURLToPath(new URL('../packages/vue-router/src', import.meta.url)),
+
+      // 子包
       '@pure-vue/shared': fileURLToPath(new URL('../packages/shared/src', import.meta.url)),
       '@pure-vue/reactivity': fileURLToPath(new URL('../packages/reactivity/src', import.meta.url)),
       '@pure-vue/runtime-core': fileURLToPath(new URL('../packages/runtime-core/src', import.meta.url)),

@@ -1,5 +1,5 @@
 {
-  "name": "vue",
+  "name": "pvue",
   "version": "0.0.1",
   "type": "module",
   "main": "dist/index.cjs.js",

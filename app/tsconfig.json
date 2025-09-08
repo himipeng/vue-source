@@ -1,13 +1,21 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "module": "ESNext",
+    "target": "ES2020",
+    "moduleResolution": "bundler", // Vite 推荐的解析模式
+    "lib": ["ES2020", "DOM"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true, // 和 Vite 的 esbuild 保持一致
+    "types": ["vite/client"], // 提供 import.meta.glob/env 类型
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "vue": ["../packages/vue/src/index.ts"],
+      "vue-router": ["../packages/vue-router/src/index.ts"]
     }
   },
   "include": ["src"],
-
   "vueCompilerOptions": {
     // 用于 Volar .vue 文件类型推导
     "globalTypesPath": "./src/types/vue-global.d.ts" // 自动生成

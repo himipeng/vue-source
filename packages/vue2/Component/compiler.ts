@@ -58,14 +58,14 @@ export default class Compiler {
 
   /** 替换绑定点内容 */
   private patchBindings() {
-    for (const [key, els] of this._bindings.entries()) {
+    this._bindings.forEach((els, key) => {
       const keys = key.split('.')
       const value = keys.reduce((obj, k) => (obj && k in obj ? obj[k] : undefined), this.$component)
       const text = value !== undefined ? value : ''
       els.forEach((el) => {
         el.textContent = String(text)
       })
-    }
+    })
   }
 
   /** 解析点击事件 */

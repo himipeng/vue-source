@@ -1,4 +1,4 @@
-import defineComponent from '@vue/vue2/Component/defineComponent'
+import defineComponent from '../../Component/defineComponent'
 import Counter from './Counter'
 
 const template = `

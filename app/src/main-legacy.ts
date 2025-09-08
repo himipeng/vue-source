@@ -1,5 +1,5 @@
-import router from '@vue/vue2/router'
-import Nav from './code/vue2/components/nav'
+import router from '../../packages/vue2/router'
+import Nav from '../../packages/vue2/components/nav'
 import './style.css'
 
 const app = document.querySelector('#app')

@@ -1,4 +1,4 @@
-import defineComponent from '@vue/vue2/Component/defineComponent'
+import defineComponent from '../../Component/defineComponent'
 import C1 from './C1'
 import C2 from './C2'
 

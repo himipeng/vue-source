@@ -6,7 +6,7 @@ class Vue<T extends ComponentOptions = ComponentOptions> {
   protected $options: T
 
   constructor($options: T) {
-    this.$options = $options || {}
+    this.$options = $options || ({} as T)
     this.initData()
   }
 
@@ -16,7 +16,7 @@ class Vue<T extends ComponentOptions = ComponentOptions> {
     if (!data) return
 
     // 将 data 存放到 _data 中
-    data = this._data = typeof data === 'function' ? (data as (() => Record<string, any>)).call(this) : data
+    data = this._data = typeof data === 'function' ? (data as () => Record<string, any>).call(this) : data
 
     // 数据代理：将 _data 中的属性代理到 Vue 实例上
     for (let key in data) {

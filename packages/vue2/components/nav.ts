@@ -1,4 +1,4 @@
-import type HashRouter from "@vue/vue2/router/hashRouter"
+import type HashRouter from '../router/hashRouter'
 
 const style = `
   display: flex;

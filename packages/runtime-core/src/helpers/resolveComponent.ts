@@ -1,5 +1,5 @@
 import type { ComponentOptions, ComponentPublicInstance } from '../'
-import { camelize, capitalize } from '@vue/shared'
+import { camelize, capitalize } from '@pure-vue/shared'
 
 /**
  * 运行时 helper，用于根据组件名解析组件实例

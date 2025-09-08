@@ -17,7 +17,7 @@
     "build": "pnpm clean && rollup -c && tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@vue/compiler-sfc": "workspace:*"
+    "@pure-vue/compiler-sfc": "workspace:*"
   },
   "peerDependencies": {
     "vite": "catalog:"

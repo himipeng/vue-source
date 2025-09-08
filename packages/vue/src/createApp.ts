@@ -1,4 +1,4 @@
-import { createApp as baseCreateApp, type App, type ComponentOptions } from '@vue/runtime-dom'
+import { createApp as baseCreateApp, type App, type ComponentOptions } from '@pure-vue/runtime-dom'
 import { compileToFunction } from './compileToFunction'
 
 /**

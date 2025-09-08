@@ -1,4 +1,4 @@
-import { isArray, isIntegerKey } from '@vue/shared'
+import { isArray, isIntegerKey } from '@pure-vue/shared'
 import { ARRAY_ITERATE_KEY, Dep, ITERATE_KEY } from '../dep'
 import { activeEffect, shouldTrack } from '../effect'
 

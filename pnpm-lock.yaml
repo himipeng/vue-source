@@ -51,52 +51,52 @@ importers:
 
   packages/compiler-core:
     devDependencies:
-      '@vue/shared':
+      '@pure-vue/shared':
         specifier: workspace:*
         version: link:../shared
 
   packages/compiler-dom:
     dependencies:
-      '@vue/compiler-core':
+      '@pure-vue/compiler-core':
         specifier: workspace:*
         version: link:../compiler-core
 
   packages/compiler-sfc:
     dependencies:
-      '@vue/compiler-core':
+      '@pure-vue/compiler-core':
         specifier: workspace:*
         version: link:../compiler-core
-      '@vue/compiler-dom':
+      '@pure-vue/compiler-dom':
         specifier: workspace:*
         version: link:../compiler-dom
 
   packages/reactivity:
     dependencies:
-      '@vue/shared':
+      '@pure-vue/shared':
         specifier: workspace:*
         version: link:../shared
 
   packages/runtime-core:
     dependencies:
-      '@vue/compiler-core':
+      '@pure-vue/compiler-core':
         specifier: workspace:*
         version: link:../compiler-core
-      '@vue/reactivity':
+      '@pure-vue/reactivity':
         specifier: workspace:*
         version: link:../reactivity
-      '@vue/shared':
+      '@pure-vue/shared':
         specifier: workspace:*
         version: link:../shared
 
   packages/runtime-dom:
     dependencies:
-      '@vue/reactivity':
+      '@pure-vue/reactivity':
         specifier: workspace:*
         version: link:../reactivity
-      '@vue/runtime-core':
+      '@pure-vue/runtime-core':
         specifier: workspace:*
         version: link:../runtime-core
-      '@vue/shared':
+      '@pure-vue/shared':
         specifier: workspace:*
         version: link:../shared
 
@@ -104,7 +104,7 @@ importers:
 
   packages/vite-plugin-vue:
     dependencies:
-      '@vue/compiler-sfc':
+      '@pure-vue/compiler-sfc':
         specifier: workspace:*
         version: link:../compiler-sfc
       vite:
@@ -113,22 +113,22 @@ importers:
 
   packages/vue:
     dependencies:
-      '@vue/compiler-core':
+      '@pure-vue/compiler-core':
         specifier: workspace:*
         version: link:../compiler-core
-      '@vue/compiler-dom':
+      '@pure-vue/compiler-dom':
         specifier: workspace:*
         version: link:../compiler-dom
-      '@vue/reactivity':
+      '@pure-vue/reactivity':
         specifier: workspace:*
         version: link:../reactivity
-      '@vue/runtime-core':
+      '@pure-vue/runtime-core':
         specifier: workspace:*
         version: link:../runtime-core
-      '@vue/runtime-dom':
+      '@pure-vue/runtime-dom':
         specifier: workspace:*
         version: link:../runtime-dom
-      '@vue/shared':
+      '@pure-vue/shared':
         specifier: workspace:*
         version: link:../shared
 

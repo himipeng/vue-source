@@ -1,5 +1,5 @@
 import { getCurrentInstance } from '../component'
-import type { InjectionKey, Provides } from '@vue/reactivity/src/types'
+import type { InjectionKey, Provides } from '@pure-vue/reactivity/src/types'
 
 /**
  * 提供依赖

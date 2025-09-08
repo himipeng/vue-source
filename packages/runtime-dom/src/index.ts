@@ -1,3 +1,3 @@
-export * from '@vue/runtime-core'
+export * from '@pure-vue/runtime-core'
 export * from './createApp'
-export { toDisplayString } from '@vue/shared'
+export { toDisplayString } from '@pure-vue/shared'

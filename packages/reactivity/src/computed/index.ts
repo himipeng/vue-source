@@ -1,4 +1,4 @@
-import { isFunction } from '@vue/shared'
+import { isFunction } from '@pure-vue/shared'
 import { ComputedRefImpl, type ComputedGetter, type ComputedSetter, type ComputedOptions } from './computedRefImpl'
 
 export function computed<T>(getter: ComputedGetter<T>): ComputedRefImpl<T>

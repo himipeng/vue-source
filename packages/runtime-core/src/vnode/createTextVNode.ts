@@ -1,6 +1,6 @@
 import type { VNode } from '../types'
 import { createVNode } from './createVNode'
-import type { PatchFlags } from '@vue/shared'
+import type { PatchFlags } from '@pure-vue/shared'
 
 // 特殊 VNode 类型标识文本节点
 export const Text = Symbol('Text')

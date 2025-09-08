@@ -6,10 +6,10 @@ import type {
   SetupContext,
   VNode,
 } from '../types'
-import { proxyRefs } from '@vue/reactivity'
-import { createAppContext } from '..'
-import { capitalize } from '@vue/shared'
-import { pauseTracking, resetTracking } from '@vue/reactivity'
+import { proxyRefs } from '@pure-vue/reactivity'
+import { createAppContext } from '../createAppAPI'
+import { capitalize } from '@pure-vue/shared'
+import { pauseTracking, resetTracking } from '@pure-vue/reactivity'
 
 export * from './defineComponent'
 

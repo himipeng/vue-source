@@ -1,5 +1,5 @@
 import type { ComponentOptions, VNode } from '../types'
-import { PatchFlags, ShapeFlags } from '@vue/shared'
+import { PatchFlags, ShapeFlags } from '@pure-vue/shared'
 
 export const Comment: unique symbol = Symbol.for('Comment')
 

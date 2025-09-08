@@ -1,9 +1,9 @@
 import type { ComponentInternalInstance, RendererNode, VNode, VNodeArrayChildren, VNodeChild } from './types'
 import { createVNode, Text, Comment } from './vnode'
-import { ShapeFlags } from '@vue/shared'
+import { ShapeFlags } from '@pure-vue/shared'
 import { createComponentInstance, setupComponent } from './component'
-import { ReactiveEffect } from '@vue/reactivity'
-import { queueJob } from '@vue/reactivity'
+import { ReactiveEffect } from '@pure-vue/reactivity'
+import { queueJob } from '@pure-vue/reactivity'
 
 /**
  * RendererOptions 表示渲染器操作宿主环境的 API

@@ -11,7 +11,7 @@ import {
   type TextNode,
   type VNodeCall,
 } from './types'
-import { isString } from '@vue/shared'
+import { isString } from '@pure-vue/shared'
 
 /**
  * 创建简单表达式节点

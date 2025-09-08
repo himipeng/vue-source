@@ -1,5 +1,5 @@
 {
-  "name": "@vue/compiler-dom",
+  "name": "@pure-vue/compiler-dom",
   "version": "0.0.1",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -18,6 +18,6 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@vue/compiler-core": "workspace:*"
+    "@pure-vue/compiler-core": "workspace:*"
   }
 }

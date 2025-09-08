@@ -1,5 +1,5 @@
 {
-  "name": "@vue/runtime-dom",
+  "name": "@pure-vue/runtime-dom",
   "version": "0.0.1",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -18,8 +18,8 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@vue/runtime-core": "workspace:*",
-    "@vue/shared": "workspace:*",
-    "@vue/reactivity": "workspace:*"
+    "@pure-vue/runtime-core": "workspace:*",
+    "@pure-vue/shared": "workspace:*",
+    "@pure-vue/reactivity": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import type { InjectionKey } from '@vue/reactivity'
+import type { InjectionKey } from '@pure-vue/reactivity'
 import type { ComponentPublicInstance } from './component'
 import type { ComponentOptions } from './componentOptions'
 

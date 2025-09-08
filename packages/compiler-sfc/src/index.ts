@@ -1,5 +1,5 @@
 // TODO: 待优化
-import { compile } from '@vue/compiler-dom'
+import { compile } from '@pure-vue/compiler-dom'
 
 export function parse(source: string) {
   const templateMatch = source.match(/<template>([\s\S]*?)<\/template>/)

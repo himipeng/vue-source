@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import { compileSFC } from '@vue/compiler-sfc'
+import { compileSFC } from '@pure-vue/compiler-sfc'
 
 export default function vuePlugin(): Plugin {
   return {

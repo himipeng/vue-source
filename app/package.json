@@ -1,7 +1,7 @@
 {
   "name": "vue-playground",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "pvue": "workspace:*",
-    "pvue-router": "workspace:*"
+    "@purevue/vue": "workspace:*",
+    "@purevue/router": "workspace:*"
   },
   "devDependencies": {
     "@purevue/vite-plugin": "workspace:*"

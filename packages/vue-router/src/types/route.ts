@@ -1,4 +1,4 @@
-import type { ComponentOptions } from 'pvue'
+import type { ComponentOptions } from '@purevue/vue'
 
 /**
  * @interface RouteRecord

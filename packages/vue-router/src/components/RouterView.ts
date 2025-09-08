@@ -1,5 +1,5 @@
-import type { ComponentPublicInstance } from 'pvue'
-import { computed, defineComponent, h, inject, provide, Ref, ref, unref } from 'pvue'
+import type { ComponentPublicInstance } from '@purevue/vue'
+import { computed, defineComponent, h, inject, provide, Ref, ref, unref } from '@purevue/vue'
 import type { RouteLocationNormalizedLoaded, RouteRecord } from '../types'
 import { matchedRouteKey, routerViewLocationKey, viewDepthKey } from '../injectionSymbols'
 

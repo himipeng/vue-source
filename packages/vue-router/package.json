@@ -1,6 +1,6 @@
 {
-  "name": "pvue-router",
-  "version": "0.0.1",
+  "name": "@purevue/router",
+  "version": "0.0.2",
   "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -18,6 +18,6 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "pvue": "workspace:*"
+    "@purevue/vue": "workspace:*"
   }
 }

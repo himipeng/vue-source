@@ -1,4 +1,4 @@
-import { ref, type Ref, type App } from 'pvue'
+import { ref, type Ref, type App } from '@purevue/vue'
 import type {
   RouteLocationNormalizedLoaded,
   RouteLocationRaw,

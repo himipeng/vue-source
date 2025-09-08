@@ -41,12 +41,12 @@ importers:
 
   app:
     dependencies:
-      pvue:
-        specifier: workspace:*
-        version: link:../packages/vue
-      pvue-router:
+      '@purevue/router':
         specifier: workspace:*
         version: link:../packages/vue-router
+      '@purevue/vue':
+        specifier: workspace:*
+        version: link:../packages/vue
     devDependencies:
       '@purevue/vite-plugin':
         specifier: workspace:*
@@ -137,7 +137,7 @@ importers:
 
   packages/vue-router:
     dependencies:
-      pvue:
+      '@purevue/vue':
         specifier: workspace:*
         version: link:../vue
 

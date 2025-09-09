@@ -4,6 +4,8 @@ import { compile } from '@purevue/compiler-dom'
 import * as runtimeDom from '@purevue/runtime-dom'
 import { registerRuntimeCompiler, type RenderFunction } from '@purevue/runtime-dom'
 
+const runtimeGlobalName = 'Vue'
+
 /**
  * 将模板字符串或 HTMLElement 编译为渲染函数（运行时编译模式）
  *
@@ -29,11 +31,11 @@ export function compileToFunction(template: string | HTMLElement, options?: Comp
   }
 
   // 调用 baseCompile 编译模板字符串，生成渲染函数代码。
-  const { code } = compile(template, { mode: 'function' })
+  const { code } = compile(template, { mode: 'function', runtimeGlobalName })
 
   // 使用 new Function 动态执行编译代码，生成渲染函数。
   // Vue 为形参，runtimeDom 为实参，code 为函数体
-  const render = new Function('Vue', code)(runtimeDom) as RenderFunction
+  const render = new Function(runtimeGlobalName, code)(runtimeDom) as RenderFunction
 
   // 将生成的渲染函数缓存，并返回。
   return (compileCache[key] = render)

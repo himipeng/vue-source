@@ -16,7 +16,7 @@ export function parse(source: string) {
 export function compileTemplate({ source }: { source: string }) {
   return compile(source, {
     mode: 'module',
-    runtimeModuleName: 'vue',
+    runtimeModuleName: '@purevue/vue',
   })
 }
 

@@ -452,7 +452,35 @@ export type JSChildNode = VNodeCall | CallExpression | ObjectExpression | Expres
  * 编译器选项类型，暂时定义为任意类型。
  */
 // TODO: export type CompilerOptions = ParserOptions & TransformOptions & CodegenOptions
-export type CompilerOptions = { mode?: 'function' | 'module'; runtimeModuleName?: string } & Record<string, any>
+
+/**
+ * 编译器选项
+ */
+export interface CompilerOptions {
+  /**
+   * 代码生成模式：
+   * - "function" 生成 render 函数字符串（适合在 runtime 里 new Function 执行， 运行时编译）
+   * - "module" 生成 ESM 模块代码（构建时编译使用）
+   */
+  mode?: 'function' | 'module'
+  /**
+   * 运行时模块名称。
+   * - 默认为 "vue"
+   * - 当前包名为 "@purevue/vue", 则应该改为 "@purevue/vue"
+   */
+  runtimeModuleName?: string
+  /**
+   * function 模式下，全局访问 runtime API 的对象名
+   * 默认值是 "Vue"
+   * 例如生成的代码：
+   *   const { h, createVNode } = Vue
+   */
+  runtimeGlobalName?: string
+  /**
+   * 额外的自定义配置。
+   */
+  // [key: string]: unknown
+}
 
 /**
  * 代码生成节点类型，描述如何生成渲染函数代码。

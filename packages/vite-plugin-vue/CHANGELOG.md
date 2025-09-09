@@ -1,5 +1,13 @@
 # @purevue/vite-plugin
 
+## 0.0.4
+
+### Patch Changes
+
+- remove tsbuildinfo
+- Updated dependencies
+  - @purevue/compiler-sfc@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes

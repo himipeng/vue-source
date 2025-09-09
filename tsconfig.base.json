@@ -12,7 +12,7 @@
     /* 
       "composite": true 会开启增量编译（用 tsconfig.tsbuildinfo 判断是否需要重新 emit）。
       如果清了 dist/ 但没删 .tsbuildinfo，TS 可能判定“已最新”，从而不再输出 .d.ts。
-      解决： 设置 "tsBuildInfoFile": "./dist/.tsbuildinfo",随 dist 一起删掉。
+      解决： 设置 "tsBuildInfoFile": "./temp/.tsbuildinfo",随 dist 一起删掉。
     */
     "composite": true,
     // 开启严格模式（更严格的类型检查：null、未定义等问题能提前发现）

@@ -1,5 +1,18 @@
 # @purevue/vue
 
+## 0.0.6
+
+### Patch Changes
+
+- fix sfc ts types
+- Updated dependencies
+  - @purevue/compiler-core@0.0.6
+  - @purevue/compiler-dom@0.0.6
+  - @purevue/runtime-core@0.0.6
+  - @purevue/runtime-dom@0.0.6
+  - @purevue/reactivity@0.0.6
+  - @purevue/shared@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes

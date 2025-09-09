@@ -1,5 +1,13 @@
 # @purevue/vite-plugin
 
+## 0.0.6
+
+### Patch Changes
+
+- fix sfc ts types
+- Updated dependencies
+  - @purevue/compiler-sfc@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes

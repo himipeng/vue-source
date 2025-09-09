@@ -1,5 +1,13 @@
 # @purevue/router
 
+## 0.0.6
+
+### Patch Changes
+
+- fix sfc ts types
+- Updated dependencies
+  - @purevue/vue@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes

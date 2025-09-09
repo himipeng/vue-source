@@ -1,6 +1,6 @@
 {
   "name": "@purevue/vue",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -10,6 +10,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.esm.js",
       "require": "./dist/index.cjs.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "vue": [
+        "dist/types/vue-alias.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -24,5 +31,8 @@
     "@purevue/runtime-dom": "workspace:*",
     "@purevue/reactivity": "workspace:*",
     "@purevue/shared": "workspace:*"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

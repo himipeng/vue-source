@@ -1,6 +1,6 @@
 {
   "name": "@purevue/shared",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -16,5 +16,8 @@
     "clean": "rimraf dist",
     "build": "pnpm clean && rollup -c && tsc -p tsconfig.json"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ]
 }

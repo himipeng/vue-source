@@ -12,13 +12,6 @@
       "require": "./dist/index.cjs.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      "vue-router": [
-        "dist/types/vue-router-alias.d.ts"
-      ]
-    }
-  },
   "scripts": {
     "clean": "rimraf dist",
     "build": "pnpm clean && rollup -c && tsc -p tsconfig.json"

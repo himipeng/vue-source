@@ -10,7 +10,9 @@
     "isolatedModules": true, // 和 Vite 的 esbuild 保持一致
     "types": ["vite/client"], // 提供 import.meta.glob/env 类型
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "vue": ["../packages/vue/src"],
+      "vue-router": ["../packages/vue-router/src"]
     }
   },
   "include": ["src"],

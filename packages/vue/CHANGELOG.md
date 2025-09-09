@@ -1,5 +1,18 @@
 # @purevue/vue
 
+## 0.0.5
+
+### Patch Changes
+
+- fix runtimeModuleName
+- Updated dependencies
+  - @purevue/compiler-core@0.0.5
+  - @purevue/compiler-dom@0.0.5
+  - @purevue/runtime-core@0.0.5
+  - @purevue/runtime-dom@0.0.5
+  - @purevue/reactivity@0.0.5
+  - @purevue/shared@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes

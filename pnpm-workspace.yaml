@@ -10,4 +10,4 @@ catalog:
   # catalog 是 pnpm 8 引入的功能，可以统一依赖版本
   # 所有 workspace 内用到的 vite 都会自动锁定为 ^6.3.5
   # eg. package.json - "vite": "catalog:",
-  'vite': ^6.3.5
+  'vite': '>=6.3.5'

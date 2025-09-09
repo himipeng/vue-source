@@ -26,6 +26,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+interface Props {}
+
 export default defineComponent({
   name: 'App',
   components: {},

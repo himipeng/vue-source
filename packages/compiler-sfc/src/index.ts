@@ -24,8 +24,9 @@ export function compileSFC(sfcSource: string, filename: string = 'anonymous.vue'
   const { descriptor } = parse(sfcSource)
   const { template, script } = descriptor
 
-  // 1) 处理 <script>，把 export default defineComponent(...) 变成 const _sfc_main = defineComponent(...)
+  // 1) 处理 <script>
   let scriptCode = script?.content ?? 'export default {}'
+  // 把 export default defineComponent(...) 变成 const _sfc_main = defineComponent(...)
   scriptCode = scriptCode.replace(/export\s+default\s+(defineComponent\s*\()/, 'const _sfc_main = $1')
   // 若不是 defineComponent，也替换成对象形式
   scriptCode = scriptCode.replace(/export\s+default\s+({)/, 'const _sfc_main = $1')

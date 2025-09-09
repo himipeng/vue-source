@@ -7,7 +7,7 @@ settings:
 catalogs:
   default:
     vite:
-      specifier: ^6.3.5
+      specifier: '>=6.3.5'
       version: 6.3.5
 
 importers:

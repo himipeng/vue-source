@@ -22,5 +22,14 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "vue",
+    "vue3",
+    "source",
+    "source-code",
+    "vue-source",
+    "router",
+    "vue-router"
   ]
 }

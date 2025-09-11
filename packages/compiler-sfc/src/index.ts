@@ -1,4 +1,4 @@
-// TODO: 待优化
+// TODO: SIMPLE VERSION
 import { compile } from '@purevue/compiler-dom'
 
 export function parse(source: string) {

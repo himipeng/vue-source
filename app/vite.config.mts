@@ -28,5 +28,8 @@ export default defineConfig({
       // '@purevue/compiler-sfc': fileURLToPath(new URL('../packages/compiler-sfc/src', import.meta.url)),
     },
   },
-  plugins: [vue()],
+  plugins: [
+    // 解析 .vue 文件
+    vue(),
+  ],
 })

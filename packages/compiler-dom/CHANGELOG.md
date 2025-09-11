@@ -1,5 +1,13 @@
 # @purevue/compiler-dom
 
+## 0.0.9
+
+### Patch Changes
+
+- readme
+- Updated dependencies
+  - @purevue/compiler-core@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes

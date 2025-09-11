@@ -1,5 +1,13 @@
 # @purevue/router
 
+## 0.0.9
+
+### Patch Changes
+
+- readme
+- Updated dependencies
+  - @purevue/vue@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes

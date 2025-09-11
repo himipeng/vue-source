@@ -1,5 +1,13 @@
 # @purevue/reactivity
 
+## 0.0.9
+
+### Patch Changes
+
+- readme
+- Updated dependencies
+  - @purevue/shared@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes

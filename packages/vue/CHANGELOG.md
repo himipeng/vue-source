@@ -1,5 +1,18 @@
 # @purevue/vue
 
+## 0.0.7
+
+### Patch Changes
+
+- README
+- Updated dependencies
+  - @purevue/compiler-core@0.0.7
+  - @purevue/compiler-dom@0.0.7
+  - @purevue/reactivity@0.0.7
+  - @purevue/runtime-core@0.0.7
+  - @purevue/runtime-dom@0.0.7
+  - @purevue/shared@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes

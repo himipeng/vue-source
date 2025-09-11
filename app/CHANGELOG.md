@@ -1,5 +1,13 @@
 # vue-playground
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @purevue/vue@0.0.8
+  - @purevue/router@0.0.8
+
 ## 0.0.6
 
 ### Patch Changes

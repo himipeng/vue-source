@@ -1,5 +1,15 @@
 # @purevue/runtime-dom
 
+## 0.0.8
+
+### Patch Changes
+
+- README
+- Updated dependencies
+  - @purevue/reactivity@0.0.8
+  - @purevue/runtime-core@0.0.8
+  - @purevue/shared@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes

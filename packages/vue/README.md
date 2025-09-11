@@ -98,9 +98,9 @@ import { createApp, ref } from '@purevue/vue'
 
 ## **📝 TODO List**
 
-### **模板编译 (Compiler)**
+### **Template Compiler**
 
-| **功能**                           | **DONE/TODO** |
+| **Feature**                        | **DONE/TODO** |
 | ---------------------------------- | ------------- |
 | parse → transform → codegen        | ✅             |
 | Runtime compilation                | ✅             |
@@ -116,9 +116,9 @@ import { createApp, ref } from '@purevue/vue'
 
 
 
-### **渲染器 (Renderer)**
+### **Renderer**
 
-| **功能**                | **DONE/TODO** |
+| **Feature**             | **DONE/TODO** |
 | ----------------------- | ------------- |
 | createApp / mount       | ✅             |
 | patch / h / createVNode | ✅             |
@@ -126,9 +126,9 @@ import { createApp, ref } from '@purevue/vue'
 
 
 
-### **响应式系统 (Reactivity)**
+### **Reactivity System**
 
-| **功能**                                        | **DONE/TODO** |
+| **Feature**                                     | **DONE/TODO** |
 | ----------------------------------------------- | ------------- |
 | ref / reactive / computed / watch / watchEffect | ✅             |
 | inject / provide                                | ✅             |
@@ -137,9 +137,9 @@ import { createApp, ref } from '@purevue/vue'
 
 
 
-### **路由系统 (Router)**
+### **Router**
 
-| **功能**           | **DONE/TODO** |
+| **Feature**        | **DONE/TODO** |
 | ------------------ | ------------- |
 | HTML5 History mode | ✅             |
 | Hash mode          | ×             |
